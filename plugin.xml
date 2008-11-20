@@ -1,0 +1,6 @@
+<plugin name='installer' version='trunk'>
+  <author>Andres Almiray</author>
+  <authorEmail>aalmiray@users.sourceforge.net</authorEmail>
+  <title>Allows creating installers for your Griffon application</title>
+  <documentation>http://griffon.codehaus.org/Installer+Plugin</documentation>
+</plugin>
