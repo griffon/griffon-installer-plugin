@@ -1,5 +1,5 @@
 class InstallerGriffonPlugin {
-    def version = 'trunk'
+    def version = '0.1-SNAPSHOT'
     def canBeGlobal = true
     def dependsOn = [:]
 
