@@ -59,6 +59,9 @@ echo.
 echo ERROR: No java.exe found at: %JAVA_EXE%
 goto common_error
 
+:valid_JAVA_HOME
+if exist "%JAVA_HOME%\lib\tools.jar" set TOOLS_JAR=%JAVA_HOME%\lib\tools.jar
+
 @rem classpath handling
 set _SKIP=2
 set CP=

@@ -31,7 +31,8 @@ defaultTarget("Prepare IzPack installer") {
 
 includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << loadScript("${installerPluginBase}/scripts/_PrepareInstaller")
+includeTargets << pluginScript("installer","_PrepareInstaller")
+// includeTargets << loadScript("${installerPluginBase}/scripts/_PrepareInstaller")
 
 target(prepareIzPackInstaller: "Prepares an IzPack installer") {
     event( "PrepareIzpackInstallerStart", [] )
