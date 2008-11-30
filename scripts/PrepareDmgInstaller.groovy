@@ -35,7 +35,11 @@ installerPluginBase = getPluginDirForName('installer').file as String
 includeTargets << loadScript("${installerPluginBase}/scripts/_PrepareInstaller")
 
 target(prepareDmgInstaller: "Prepares an Dmg installer") {
+    event( "PrepareDmgInstallerStart", [] )
+
     installerWorkDir = "${basedir}/installer/dmg"
     binaryDir = installerWorkDir
     prepareBinary()
+
+    event( "PrepareDmgInstallerEnd", [] )
 }

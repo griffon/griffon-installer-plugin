@@ -35,6 +35,8 @@ installerPluginBase = getPluginDirForName('installer').file as String
 includeTargets << loadScript("${installerPluginBase}/scripts/_PrepareInstaller")
 
 target(prepareRPMInstaller: "Prepares an RPM installer") {
+    event( "PrepareRpmInstallerStart", [] )
+
     installerWorkDir = "${basedir}/installer/rpm"
     Ant.mkdir( dir: "${installerWorkDir}/BUILD" )
     Ant.mkdir( dir: "${installerWorkDir}/SOURCES" )
@@ -58,4 +60,6 @@ target(prepareRPMInstaller: "Prepares an RPM installer") {
     Ant.zip( destfile: "${installerWorkDir}/SOURCES/${griffonAppName}-${griffonAppVersion}-bin.zip",
              basedir: installerWorkDir,
              includes: "${griffonAppName}-${griffonAppVersion}/**/*" )
+
+    event( "PrepareRpmInstallerEnd", [] )
 }

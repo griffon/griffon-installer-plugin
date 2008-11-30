@@ -34,6 +34,8 @@ installerPluginBase = getPluginDirForName('installer').file as String
 includeTargets << loadScript("${installerPluginBase}/scripts/_PrepareInstaller")
 
 target(prepareIzPackInstaller: "Prepares an IzPack installer") {
+    event( "PrepareIzpackInstallerStart", [] )
+
     installerWorkDir = "${basedir}/installer/izpack"
     resourcesDir = installerWorkDir + "/resources"
     binaryDir = installerWorkDir + "/binary"
@@ -46,4 +48,6 @@ target(prepareIzPackInstaller: "Prepares an IzPack installer") {
         replacefilter( token: "@app.name@", value:"${griffonAppName}" )
         replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
     }
+
+    event( "PrepareIzpackInstallerEnd", [] )
 }
