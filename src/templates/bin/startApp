@@ -1,199 +1,193 @@
-@if "%DEBUG%" == "" @echo off
+# -*- mode:sh -*-
 
-@rem Set local scope for the variables with windows NT shell
-if "%OS%"=="Windows_NT" setlocal
+PROGNAME=`basename "$0"`
 
-set DIRNAME=%~1
-shift
+#DIRNAME=`dirname "$0"`
 
-set CLASS=%~1
-shift
+SCRIPT_PATH="$0"
 
-@rem Determine the command interpreter to execute the "CD" later
-set COMMAND_COM="cmd.exe"
-if exist "%SystemRoot%\system32\cmd.exe" set COMMAND_COM="%SystemRoot%\system32\cmd.exe"
-if exist "%SystemRoot%\command.com" set COMMAND_COM="%SystemRoot%\command.com"
+# Use the maximum available, or set MAX_FD != -1 to use that value.
+MAX_FD="maximum"
 
-@rem Use explicit find.exe to prevent cygwin and others find.exe from being used
-set FIND_EXE="find.exe"
-if exist "%SystemRoot%\system32\find.exe" set FIND_EXE="%SystemRoot%\system32\find.exe"
-if exist "%SystemRoot%\command\find.exe" set FIND_EXE="%SystemRoot%\command\find.exe"
+warn ( ) {
+    echo "${PROGNAME}: $*"
+}
 
-:check_JAVA_HOME
-@rem Make sure we have a valid JAVA_HOME
-if not "%JAVA_HOME%" == "" goto have_JAVA_HOME
-for %%P in (%PATH%) do if exist %%P\..\bin\java.exe set JAVA_HOME=%%P\..
-if not "%JAVA_HOME%" == "" goto valid_JAVA_HOME
-java -version 2>NUL
-if not ERRORLEVEL 1 goto default_JAVA_EXE
+die ( ) {
+    warn "$*"
+    exit 1
+}
 
-echo.
-echo ERROR: Environment variable JAVA_HOME has not been set.
-echo Attempting to find JAVA_HOME from PATH also failed.
-goto common_error
+earlyInit ( ) {
+    return
+}
 
-:have_JAVA_HOME
-@rem Remove trailing slash from JAVA_HOME if found
-if "%JAVA_HOME:~-1%"=="\" SET JAVA_HOME=%JAVA_HOME:~0,-1%
+lateInit ( ) {
+    return
+}
 
-@rem Validate JAVA_HOME
-%COMMAND_COM% /C DIR "%JAVA_HOME%" 2>&1 | %FIND_EXE% /I /C "%JAVA_HOME%" >nul
-if not errorlevel 1 goto valid_JAVA_HOME_DIR
+earlyInit
 
-echo.
-echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
+# OS specific support (must be 'true' or 'false').
+cygwin=false
+msys=false
+darwin=false
+case "`uname`" in
+  CYGWIN* )
+    cygwin=true
+    ;; 
+  Darwin* )
+    darwin=true
+    ;;
+  MINGW* )
+    msys=true
+    ;;
+esac
 
-:common_error
-echo Please set the JAVA_HOME variable in your environment
-echo to match the location of your Java installation.
-goto end
+#if [ "$1" = "-cp" -o "$1" = "-classpath" ] ; then
+#    CP=$2
+#    shift 2
+#fi
 
-:default_JAVA_EXE
-set JAVA_EXE=java.exe
+# Attempt to set JAVA_HOME if it's not already set.
+if [ -z "$JAVA_HOME" ] ; then
+    if $darwin ; then 
+        [ -z "$JAVA_HOME" -a -d "/Library/Java/Home" ] && export JAVA_HOME="/Library/Java/Home"
+        [ -z "$JAVA_HOME" -a -d "/System/Library/Frameworks/JavaVM.framework/Home" ] && export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
+    else
+        javaExecutable="`which javac`"
+        [ -z "$javaExecutable" -o "`expr \"$javaExecutable\" : '\([^ ]*\)'`" = "no" ] && die "JAVA_HOME not set and cannot find javac to deduce location, please set JAVA_HOME."
+        # readlink(1) is not available as standard on Solaris 10.
+        readLink=`which readlink`
+        [ `expr "$readLink" : '\([^ ]*\)'` = "no" ] && die "JAVA_HOME not set and readlink not available, please set JAVA_HOME."
+        javaExecutable="`readlink -f \"$javaExecutable\"`"
+        javaHome="`dirname \"$javaExecutable\"`"
+        javaHome=`expr "$javaHome" : '\(.*\)/bin'`
+        JAVA_HOME="$javaHome"
+        export JAVA_HOME
 
-:valid_JAVA_HOME_DIR
-set JAVA_EXE=%JAVA_HOME%\bin\java.exe
-if exist "%JAVA_EXE%" goto valid_JAVA_HOME
+    fi
+fi
 
-echo.
-echo ERROR: No java.exe found at: %JAVA_EXE%
-goto common_error
+# For Cygwin, ensure paths are in UNIX format before anything is touched.
+if $cygwin ; then
+    [ -n "$JAVACMD" ] && JAVACMD=`cygpath --unix "$JAVACMD"`
+    [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+    #[ -n "$CP" ] && CP=`cygpath --path --unix "$CP"`
+fi
 
-:valid_JAVA_HOME
-if exist "%JAVA_HOME%\lib\tools.jar" set TOOLS_JAR=%JAVA_HOME%\lib\tools.jar
+LIBDIR="${DIRNAME}/../lib"
+CLASSPATH=""
+for jar in `ls "$LIBDIR"`; do
+    CLASSPATH="${CLASSPATH}:${LIBDIR}/${jar}"
+done
 
-@rem classpath handling
-set _SKIP=2
-set CP=
-if "x%~1" == "x-cp" set CP=%~2
-if "x%~1" == "x-classpath" set CP=%~2
-if "x%~1" == "x--classpath" set CP=%~2
-if "x" == "x%CP%" goto init
-set _SKIP=4
-shift
-shift
+# Create the final classpath. Setting a classpath using the -cp or -classpath option means not to use the
+# global classpath. Groovy behaves then the same as the java interpreter
+#if [ -n "$CP" ] ; then
+#    CP="$CP":.
+#elif [ -n "$CLASSPATH" ] ; then
+#    CP="$CLASSPATH":.
+#else
+#    CP=.
+#fi
 
-:init
-@rem Get command-line arguments, handling Windowz variants
-if not "%OS%" == "Windows_NT" goto win9xME_args
-if "%eval[2+2]" == "4" goto 4NT_args
+# Determine the Java command to use to start the JVM.
+if [ -z "$JAVACMD" ] ; then
+    if [ -n "$JAVA_HOME" ] ; then
+        if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+            # IBM's JDK on AIX uses strange locations for the executables
+            JAVACMD="$JAVA_HOME/jre/sh/java"
+        else
+            JAVACMD="$JAVA_HOME/bin/java"
+        fi
+    else
+        JAVACMD="java"
+    fi
+fi
+if [ ! -x "$JAVACMD" ] ; then
+    die "JAVA_HOME is not defined correctly, can not execute: $JAVACMD"
+fi
+if [ -z "$JAVA_HOME" ] ; then
+    warn "JAVA_HOME environment variable is not set"
+fi
 
-:win9xME_args
-@rem Slurp the command line arguments.
-set CMD_LINE_ARGS=
+# Increase the maximum file descriptors if we can.
+if [ "$cygwin" = "false" -a "$darwin" = "false" ] ; then
+    MAX_FD_LIMIT=`ulimit -H -n`
+    if [ $? -eq 0 ] ; then
+        if [ "$MAX_FD" = "maximum" -o "$MAX_FD" = "max" ] ; then
+            MAX_FD="$MAX_FD_LIMIT"
+        fi
+        ulimit -n $MAX_FD
+        if [ $? -ne 0 ] ; then
+            warn "Could not set maximum file descriptor limit: $MAX_FD"
+        fi
+    else
+        warn "Could not query businessSystem maximum file descriptor limit: $MAX_FD_LIMIT"
+    fi
+fi
 
-:win9xME_args_slurp
-if "x%~1" == "x" goto execute
+# For Darwin, add GROOVY_APP_NAME to the JAVA_OPTS as -Xdock:name
+if $darwin; then
+    JAVA_OPTS="$JAVA_OPTS -Xdock:name=$GROOVY_APP_NAME"
+# we may also want to set -Xdock:image    
+fi
 
-rem horrible roll your own arg processing inspired by jruby equivalent
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin ; then
+    JAVA_HOME=`cygpath --mixed "$JAVA_HOME"`
+    #CP=`cygpath --path --mixed "$CP"`    
+    TOOLS_JAR=`cygpath --mixed "$TOOLS_JAR"`
+    CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
 
-rem escape minus (-d), quotes (-q), star (-s).
-set _ARGS=%*
-if not defined _ARGS goto execute
-set _ARGS=%_ARGS:-=-d%
-set _ARGS=%_ARGS:"=-q%
-rem Windowz will try to match * with files so we escape it here
-rem but it is also a meta char for env var string substitution
-rem so it can't be first char here, hack just for common cases.
-rem If in doubt use a space or bracket before * if using -e.
-set _ARGS=%_ARGS: *= -s%
-set _ARGS=%_ARGS:)*=)-s%
-set _ARGS=%_ARGS:0*=0-s%
-set _ARGS=%_ARGS:1*=1-s%
-set _ARGS=%_ARGS:2*=2-s%
-set _ARGS=%_ARGS:3*=3-s%
-set _ARGS=%_ARGS:4*=4-s%
-set _ARGS=%_ARGS:5*=5-s%
-set _ARGS=%_ARGS:6*=6-s%
-set _ARGS=%_ARGS:7*=7-s%
-set _ARGS=%_ARGS:8*=8-s%
-set _ARGS=%_ARGS:9*=9-s%
-rem prequote all args for 'for' statement
-set _ARGS="%_ARGS%"
+    # We build the pattern for arguments to be converted via cygpath
+    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`
+    SEP=""
+    for dir in $ROOTDIRSRAW ; do
+        ROOTDIRS="$ROOTDIRS$SEP$dir"
+        SEP="|"
+    done
+    OURCYGPATTERN="(^($ROOTDIRS))"
+    # Add a user-defined pattern to the cygpath arguments
+    if [ "$GROOVY_CYGPATTERN" != "" ] ; then
+        OURCYGPATTERN="$OURCYGPATTERN|($GROOVY_CYGPATTERN)"
+    fi
+    # Now convert the arguments - kludge to limit ourselves to /bin/sh
+    i=0
+    for arg in "$@" ; do
+        CHECK=`echo "$arg"|egrep -c "$OURCYGPATTERN" -`
+        if [ $CHECK -ne 0 ] ; then
+            eval `echo args$i`=`cygpath --path --ignore --mixed "$arg"`
+        else
+            eval `echo args$i`="\"$arg\""
+        fi
+        i=`expr $i + 1`
+    done
+    case $i in
+        0) set -- ;;
+        1) set -- "$args0" ;;
+        2) set -- "$args0" "$args1" ;;
+        3) set -- "$args0" "$args1" "$args2" ;;
+        4) set -- "$args0" "$args1" "$args2" "$args3" ;;
+        5) set -- "$args0" "$args1" "$args2" "$args3" "$args4" ;;
+        6) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" ;;
+        7) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" ;;
+        8) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" ;;
+        9) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" "$args8" ;;
+    esac
 
-:win9xME_args_loop
-rem split args by spaces into first and rest
-for /f "tokens=1,*" %%i in (%_ARGS%) do call :get_arg "%%i" "%%j"
-goto process_arg
+fi
 
-:get_arg
-rem remove quotes around first arg
-for %%i in (%1) do set _ARG=%%~i
-rem set the remaining args
-set _ARGS=%2
-rem return
-goto :EOF
+startApp ( ) {
+    CLASS=$1
+    shift
+    exec "$JAVACMD" $JAVA_OPTS \
+         -classpath "$CLASSPATH" \
+         -Dprogram.name="$PROGNAME" \
+         $MAIN_CLASS 
+}
 
-:process_arg
-if "%_ARG%" == "" goto execute
+MAIN_CLASS=griffon.application.SingleFrameApplication
 
-if "x4" == "x%_SKIP%" goto skip_4
-if "x3" == "x%_SKIP%" goto skip_3
-if "x2" == "x%_SKIP%" goto skip_2
-if "x1" == "x%_SKIP%" goto skip_1
-
-rem now unescape -q, -s, -d
-set _ARG=%_ARG:-q="%
-set _ARG=%_ARG:-s=*%
-set _ARG=%_ARG:-d=-%
-
-set CMD_LINE_ARGS=%CMD_LINE_ARGS% %_ARG%
-set _ARG=
-goto win9xME_args_loop
-
-:skip_4
-set _ARG=
-set _SKIP=3
-goto win9xME_args_loop
-
-:skip_3
-set _ARG=
-set _SKIP=2
-goto win9xME_args_loop
-
-:skip_2
-set _ARG=
-set _SKIP=1
-goto win9xME_args_loop
-
-:skip_1
-set _ARG=
-set _SKIP=0
-goto win9xME_args_loop
-
-:4NT_args
-@rem Get arguments from the 4NT Shell from JP Software
-set CMD_LINE_ARGS=%$
-
-:execute
-@rem Setup the command line
-set LIBDIR=%DIRNAME%\..\lib
-set CP=
-for %%J in ( %LIBDIR%\*.jar ) do call setCP.bat %%J
-
-
-@rem Setting a classpath using the -cp or -classpath option means not to use
-@rem the global classpath. Groovy behaves then the same as the java
-@rem interpreter
-if "x" == "x%CP%" goto empty_cp
-:non_empty_cp
-set CP=%CP%;.
-goto after_cp
-:empty_cp
-set CP=.
-if "x" == "x%CLASSPATH%" goto after_cp
-set CP=%CLASSPATH%;%CP%
-:after_cp
-
-if "%JAVA_OPTS%" == "" set JAVA_OPTS="-Xmx128m"
-set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%"
-
-@rem Execute App
-"%JAVA_EXE%" %JAVA_OPTS% -classpath "%CP%" griffon.application.SingleFrameApplication %CMD_LINE_ARGS%
-
-:end
-@rem End local scope for the variables with windows NT shell
-if "%OS%"=="Windows_NT" endlocal
-
-@rem Optional pause the batch file
-if "%GROOVY_BATCH_PAUSE%" == "on" pause
+lateInit
