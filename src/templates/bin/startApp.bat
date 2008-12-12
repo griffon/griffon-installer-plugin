@@ -188,7 +188,7 @@ if "%JAVA_OPTS%" == "" set JAVA_OPTS="-Xmx128m"
 set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%"
 
 @rem Execute App
-"%JAVA_EXE%" %JAVA_OPTS% -classpath "%CLASSPATH%" griffon.application.SingleFrameApplication %CMD_LINE_ARGS%
+"%JAVA_EXE%" %JAVA_OPTS% -classpath "%CP%" griffon.application.SingleFrameApplication %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
