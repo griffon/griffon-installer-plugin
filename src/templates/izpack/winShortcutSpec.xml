@@ -6,6 +6,20 @@
                 location="applications"/>
 
   <shortcut
+    name="@app.name@"
+    target="$INSTALL_PATH\bin\@app.name@.bat"
+    commandLine=""
+    workingDirectory="$INSTALL_PATH"
+    description="Run @app.name@"
+    initialState="normal"
+    programGroup="yes"
+    desktop="no"
+    applications="no"
+    startMenu="no"
+    startup="no">
+  </shortcut>
+
+  <shortcut
     name="Uninstall"
     target="$INSTALL_PATH\\Uninstaller\uninstaller.jar"
     commandLine=""

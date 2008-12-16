@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <installation version="1.0">
   <variables>
-    <variable name="appGroup" value="@app.name"/>
+    <variable name="appGroup" value="@app.name@"/>
     <variable name="appTitle" value="@app.name@"/>
     <variable name="appSubPath" value="@app.name@-@app.version@"/>
     <variable name="appVersion" value="@app.version@"/>

@@ -167,9 +167,9 @@ set CMD_LINE_ARGS=%$
 
 :execute
 @rem Setup the command line
-set LIBDIR=%DIRNAME%\..\lib
+set LIBDIR="%DIRNAME%\..\lib"
 set CLASSPATH=""
-for %%J in ( %LIBDIR%\*.jar ) do call setCP.bat %%J
+for %%J in ( %LIBDIR%\*.jar ) do call "%DIRNAME%\setCP.bat" %%J
 
 @rem Setting a classpath using the -cp or -classpath option means not to use
 @rem the global classpath. Groovy behaves then the same as the java
