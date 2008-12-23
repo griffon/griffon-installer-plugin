@@ -22,8 +22,8 @@
  * @since 0.1
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
+ant.property(environment:"env")
+griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
 defaultTarget("Prepare Binary") {
     depends(checkVersion, packageApp, classpath)
@@ -40,43 +40,43 @@ installerPluginBase = getPluginDirForName('installer').file as String
 target(prepareBinary: "") {
     packageApp()
 
-    Ant.mkdir( dir: "${binaryDir}" )
-    Ant.mkdir( dir: "${binaryDir}/lib" )
-    Ant.mkdir( dir: "${binaryDir}/bin" )
+    ant.mkdir( dir: "${binaryDir}" )
+    ant.mkdir( dir: "${binaryDir}/lib" )
+    ant.mkdir( dir: "${binaryDir}/bin" )
 
-    Ant.copy( todir: "${binaryDir}/bin" ) {
+    ant.copy( todir: "${binaryDir}/bin" ) {
         fileset( dir: "${installerPluginBase}/src/templates/bin" )
     }
-    Ant.replace( dir: "${binaryDir}/bin" ) {
+    ant.replace( dir: "${binaryDir}/bin" ) {
         replacefilter( token: "@app.name@", value:"${griffonAppName}" )
         replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
     }
-    Ant.move( file: "${binaryDir}/bin/app.run", tofile: "${binaryDir}/bin/${griffonAppName}" )
-    Ant.move( file: "${binaryDir}/bin/app.run.bat", tofile: "${binaryDir}/bin/${griffonAppName}.bat" )
+    ant.move( file: "${binaryDir}/bin/app.run", tofile: "${binaryDir}/bin/${griffonAppName}" )
+    ant.move( file: "${binaryDir}/bin/app.run.bat", tofile: "${binaryDir}/bin/${griffonAppName}.bat" )
 
-    Ant.copy( todir: "${binaryDir}/lib" ) {
+    ant.copy( todir: "${binaryDir}/lib" ) {
         fileset( dir: "${basedir}/staging", includes : "*.jar" )
     }
 }
 
 target(test_is_linux: "" ) {
-    Ant.condition( property: "os.isLinux", value: true ) {
+    ant.condition( property: "os.isLinux", value: true ) {
         and {
             os( family: "unix" )
             and { os( name: "Linux" ) }
         }
     }
-    Ant.fail( message: "You are not running on Linux", unless:"os.isLinux" )
-    Ant.echo( message: "You are running ${os.name} ${os.arch} ${os.version}" )
+    ant.fail( message: "You are not running on Linux", unless:"os.isLinux" )
+    ant.echo( message: "You are running ${ant.properties.'os.name'} ${ant.properties.'os.arch'} ${ant.properties.'os.version'}" )
 }
 
 target(test_is_osx: "" ) {
-    Ant.condition( property: "os.isOSX", value: true ) {
+    ant.condition( property: "os.isOSX", value: true ) {
         and {
             os( family: "mac" )
             and { os( family: "unix" ) }
         }
     }
-    Ant.fail( message: "You are not running on MacOSX", unless: "os.isOSX" )
-    Ant.echo( message: "You are running ${os.name} ${os.arch} ${os.version}" )
+    ant.fail( message: "You are not running on MacOSX", unless: "os.isOSX" )
+    ant.echo( message: "You are running ${ant.properties.'os.name'} ${ant.properties.'os.arch'} ${ant.properties.'os.version'}" )
 }

@@ -26,15 +26,15 @@ Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 
 defaultTarget("Prepare Dmg installer") {
-    depends( test_is_osx )
     prepareDmgInstaller()
 }
 
 includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << loadScript("${installerPluginBase}/scripts/_PrepareInstaller")
+includeTargets << pluginScript("installer","_PrepareInstaller")
 
 target(prepareDmgInstaller: "Prepares an Dmg installer") {
+    depends( test_is_osx )
     event( "PrepareDmgInstallerStart", [] )
 
     installerWorkDir = "${basedir}/installer/dmg"

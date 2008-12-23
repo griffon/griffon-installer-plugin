@@ -26,15 +26,15 @@ Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 
 defaultTarget("Prepare RPM installer") {
-    depends( text_is_linux )
     prepareRPMInstaller()
 }
 
 includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << loadScript("${installerPluginBase}/scripts/_PrepareInstaller")
+includeTargets << pluginScript("installer","_PrepareInstaller")
 
 target(prepareRPMInstaller: "Prepares an RPM installer") {
+    depends( test_is_linux )
     event( "PrepareRpmInstallerStart", [] )
 
     installerWorkDir = "${basedir}/installer/rpm"
