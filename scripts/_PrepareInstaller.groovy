@@ -55,7 +55,7 @@ target(prepareBinary: "") {
     ant.move( file: "${binaryDir}/bin/app.run.bat", tofile: "${binaryDir}/bin/${griffonAppName}.bat" )
 
     ant.copy( todir: "${binaryDir}/lib" ) {
-        fileset( dir: "${basedir}/staging", includes : "*.jar" )
+        fileset( dir: "${basedir}/staging", excludes: "*.jnlp,applet.html,griffon.jpeg" )
     }
 }
 

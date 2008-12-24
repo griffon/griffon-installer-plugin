@@ -182,10 +182,13 @@ fi
 startApp ( ) {
     CLASS=$1
     shift
+    PWD=`pwd`
+    STARTDIR="${PWD}${DIRNAME}/../"
     exec "$JAVACMD" $JAVA_OPTS \
+         -Dgriffon.start.dir="$STARTDIR" \
          -classpath "$CLASSPATH" \
          -Dprogram.name="$PROGNAME" \
-         $MAIN_CLASS 
+         $MAIN_CLASS
 }
 
 MAIN_CLASS=griffon.application.SingleFrameApplication
