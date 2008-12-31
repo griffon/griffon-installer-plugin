@@ -1,5 +1,5 @@
 class InstallerGriffonPlugin {
-    def version = '0.1-SNAPSHOT'
+    def version = '0.1'
     def canBeGlobal = true
     def dependsOn = [:]
 
@@ -11,7 +11,6 @@ Allows creating installers for your Griffon application.
 Supported formats are:
  - IzPack (universal)
  - RPM (Linux)
- - DEB (Linux)
  - DMG (MacOSX)
 '''
 

@@ -1,6 +1,7 @@
-<plugin name='installer' version='0.1-SNAPSHOT' jdk='1.4'>
+<plugin name='installer' version='0.1' jdk='1.5'>
   <author>Andres Almiray</author>
   <authorEmail>aalmiray@users.sourceforge.net</authorEmail>
   <title>Allows creating installers for your Griffon application</title>
   <documentation>http://griffon.codehaus.org/Installer+Plugin</documentation>
+  <dependencies />
 </plugin>
