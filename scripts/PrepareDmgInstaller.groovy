@@ -19,15 +19,11 @@
  *
  * @author Andres Almiray
  *
- * @since 0.1
+ * @since 0.ant
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-defaultTarget("Prepare Dmg installer") {
-    prepareDmgInstaller()
-}
+ant.property(environment:"env")
+griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
@@ -43,3 +39,5 @@ target(prepareDmgInstaller: "Prepares an Dmg installer") {
 
     event( "PrepareDmgInstallerEnd", [] )
 }
+
+setDefaultTarget(prepareDmgInstaller)

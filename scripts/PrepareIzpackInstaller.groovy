@@ -22,12 +22,8 @@
  * @since 0.1
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-defaultTarget("Prepare IzPack installer") {
-    prepareIzPackInstaller()
-}
+ant.property(environment:"env")
+griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
@@ -39,15 +35,17 @@ target(prepareIzPackInstaller: "Prepares an IzPack installer") {
     installerWorkDir = "${basedir}/installer/izpack"
     resourcesDir = installerWorkDir + "/resources"
     binaryDir = installerWorkDir + "/binary"
-    prepareBinary()
 
-    Ant.copy( todir: resourcesDir ) {
+    ant.copy( todir: resourcesDir ) {
         fileset( dir: "${installerPluginBase}/src/templates/izpack" )
     }
-    Ant.replace( dir: resourcesDir, includes: "*.xml,*.html,*.txt" ) {
+    ant.replace( dir: resourcesDir, includes: "*.xml,*.html,*.txt" ) {
         replacefilter( token: "@app.name@", value:"${griffonAppName}" )
         replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
     }
 
+    prepareBinary()
     event( "PrepareIzpackInstallerEnd", [] )
 }
+
+setDefaultTarget(prepareIzPackInstaller)

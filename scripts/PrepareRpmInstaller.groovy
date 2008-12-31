@@ -22,12 +22,8 @@
  * @since 0.1
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-defaultTarget("Prepare RPM installer") {
-    prepareRPMInstaller()
-}
+ant.property(environment:"env")
+griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
@@ -38,28 +34,30 @@ target(prepareRPMInstaller: "Prepares an RPM installer") {
     event( "PrepareRpmInstallerStart", [] )
 
     installerWorkDir = "${basedir}/installer/rpm"
-    Ant.mkdir( dir: "${installerWorkDir}/BUILD" )
-    Ant.mkdir( dir: "${installerWorkDir}/SOURCES" )
-    Ant.mkdir( dir: "${installerWorkDir}/SPECS" )
-    Ant.mkdir( dir: "${installerWorkDir}/SRPMS" )
-    Ant.mkdir( dir: "${installerWorkDir}/RPMS/noarch" )
+    ant.mkdir( dir: "${installerWorkDir}/BUILD" )
+    ant.mkdir( dir: "${installerWorkDir}/SOURCES" )
+    ant.mkdir( dir: "${installerWorkDir}/SPECS" )
+    ant.mkdir( dir: "${installerWorkDir}/SRPMS" )
+    ant.mkdir( dir: "${installerWorkDir}/RPMS/noarch" )
     binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
-    Ant.mkdir( dir: binaryDir )
+    ant.mkdir( dir: binaryDir )
 
     prepareBinary()
 
-    Ant.copy( todir: "${installerWorkDir}/SPECS" ) {
+    ant.copy( todir: "${installerWorkDir}/SPECS" ) {
         fileset( dir: "${installerPluginBase}/src/templates/rpm" )
     }
-    Ant.replace( dir: "${installerWorkDir}/SPECS" ) {
+    ant.replace( dir: "${installerWorkDir}/SPECS" ) {
         replacefilter( token: "@app.name@", value:"${griffonAppName}" )
         replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
     }
-    Ant.move( file: "${installerWorkDir}/SPECS/app.spec",
+    ant.move( file: "${installerWorkDir}/SPECS/app.spec",
               tofile: "${installerWorkDir}/SPECS/${griffonAppName}.spec" )
-    Ant.zip( destfile: "${installerWorkDir}/SOURCES/${griffonAppName}-${griffonAppVersion}-bin.zip",
+    ant.zip( destfile: "${installerWorkDir}/SOURCES/${griffonAppName}-${griffonAppVersion}-bin.zip",
              basedir: installerWorkDir,
              includes: "${griffonAppName}-${griffonAppVersion}/**/*" )
 
     event( "PrepareRpmInstallerEnd", [] )
 }
+
+setDefaultTarget(prepareRPMInstaller)

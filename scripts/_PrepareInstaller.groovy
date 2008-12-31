@@ -25,19 +25,16 @@
 ant.property(environment:"env")
 griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
-defaultTarget("Prepare Binary") {
-    depends(checkVersion, packageApp, classpath)
-    prepareBinary()
-}
 
 includeTargets << griffonScript("Package")
-
 installerPluginBase = getPluginDirForName('installer').file as String
 // These will be set by caller script
 // installerWorkDir = "${basedir}/installer/izpack"
 // binaryDir = installerWorkDir + "/binary"
 
 target(prepareBinary: "") {
+    depends(checkVersion, packageApp, classpath)
+
     packageApp()
 
     ant.mkdir( dir: "${binaryDir}" )
@@ -80,3 +77,5 @@ target(test_is_osx: "" ) {
     ant.fail( message: "You are not running on MacOSX", unless: "os.isOSX" )
     ant.echo( message: "You are running ${ant.properties.'os.name'} ${ant.properties.'os.arch'} ${ant.properties.'os.version'}" )
 }
+
+// setDefaultTarget(prepareBinary)

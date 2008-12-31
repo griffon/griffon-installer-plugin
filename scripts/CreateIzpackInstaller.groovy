@@ -22,10 +22,24 @@
  * @since 0.1
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
+ant.property(environment:"env")
+griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
-defaultTarget("Create IzPack installer") {
+includeTargets << griffonScript("Package")
+installerPluginBase = getPluginDirForName('installer').file as String
+installerWorkDir = "${basedir}/installer/izpack"
+resourcesDir = installerWorkDir + "/resources"
+binaryDir = installerWorkDir + "/binary"
+
+ant.path( id : 'installerJarSet' ) {
+    fileset( dir: "${installerPluginBase}/lib/installer", includes : "*.jar" )
+}
+
+ant.taskdef( name: "izpack",
+             classname: "com.izforge.izpack.ant.IzPackTask",
+             classpathref: "installerJarSet" )
+
+target(izPackSanityCheck:"") {
     depends(checkVersion, classpath)
     def src = new File( installerWorkDir )
     if( src && src.list() ) {
@@ -38,25 +52,12 @@ and configure the files appropriately.
     }
 }
 
-includeTargets << griffonScript("Package")
-
-installerPluginBase = getPluginDirForName('installer').file as String
-installerWorkDir = "${basedir}/installer/izpack"
-resourcesDir = installerWorkDir + "/resources"
-binaryDir = installerWorkDir + "/binary"
-
-Ant.path( id : 'installerJarSet' ) {
-    fileset( dir: "${installerPluginBase}/lib/installer", includes : "*.jar" )
-}
-
-Ant.taskdef( name: "izpack",
-             classname: "com.izforge.izpack.ant.IzPackTask",
-             classpathref: "installerJarSet" )
-
 target(createIzPackInstaller: "Creates an IzPack installer") {
-    Ant.izpack( basedir: installerWorkDir,
+    ant.izpack( basedir: installerWorkDir,
                 input: "${installerWorkDir}/resources/installer.xml",
                 output: "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}-installer.jar",
                 compression: "deflate",
                 compressionLevel: "9" )
 }
+
+setDefaultTarget(izPackSanityCheck)

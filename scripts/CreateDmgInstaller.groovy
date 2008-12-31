@@ -22,12 +22,8 @@
  * @since 0.1
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-defaultTarget("Create DMG installer") {
-   dmgSanityCheck()
-}
+ant.property(environment:"env")
+griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
@@ -49,7 +45,9 @@ and configure the files appropriately.
 }
 
 target(createDMGInstaller: "Creates a DMG installer") {
-    Ant.exec( executable: "hdiutil" ) {
+    ant.exec( executable: "hdiutil" ) {
        arg( line:"create -srcfolder ${installerWorkDir} ${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg" )
     }
 }
+
+setDefaultTarget(dmgSanityCheck)

@@ -22,17 +22,12 @@
  * @since 0.1
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-defaultTarget("Create RPM installer") {
-    rpmSanityCheck()
-}
+ant.property(environment:"env")
+griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
 includeTargets << pluginScript("installer","_PrepareInstaller")
-
 installerWorkDir = "${basedir}/installer/rpm"
 
 target(rpmSanityCheck:"") {
@@ -49,8 +44,10 @@ and configure the files appropriately.
 }
 
 target(createRPMInstaller: "Creates an RPM installer") {
-    Ant.rpm( specFile: "${griffonAppName}.spec",
+    ant.rpm( specFile: "${griffonAppName}.spec",
              topDir: installerWorkDir,
              cleanBuildDir: "false",
              failOnError: "true" )
 }
+
+setDefaultTarget(rpmSanityCheck)
