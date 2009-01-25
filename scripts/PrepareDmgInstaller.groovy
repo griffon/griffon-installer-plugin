@@ -25,7 +25,7 @@
 ant.property(environment:"env")
 griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
-includeTargets << griffonScript("Init")
+includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
 includeTargets << pluginScript("installer","_PrepareInstaller")
 

@@ -183,7 +183,7 @@ startApp ( ) {
     CLASS=$1
     shift
     PWD=`pwd`
-    STARTDIR="${PWD}${DIRNAME}/../"
+    STARTDIR="${PWD}/${DIRNAME}/../"
     exec "$JAVACMD" $JAVA_OPTS \
          -Dgriffon.start.dir="$STARTDIR" \
          -classpath "$CLASSPATH" \

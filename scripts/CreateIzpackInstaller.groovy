@@ -25,7 +25,7 @@
 ant.property(environment:"env")
 griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
-includeTargets << griffonScript("Package")
+includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
 installerWorkDir = "${basedir}/installer/izpack"
 resourcesDir = installerWorkDir + "/resources"
