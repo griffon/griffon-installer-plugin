@@ -1,0 +1,57 @@
+/*
+ * Copyright 2009 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Gant script that prepares an Jsmooth based installer
+ *
+ * @author Andres Almiray
+ *
+ * @since 0.1
+ */
+
+ant.property(environment:"env")
+griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
+
+includeTargets << griffonScript("_GriffonInit")
+installerPluginBase = getPluginDirForName('installer').file as String
+includeTargets << pluginScript("installer","_PrepareInstaller")
+
+target(prepareJsmoothLauncher: "Prepares an Jsmooth launcher") {
+    event( "PrepareJsmoothLauncherStart", [] )
+
+    installerWorkDir = "${basedir}/installer/jsmooth"
+    binaryDir = installerWorkDir
+
+    prepareBinary()
+    ant.delete(dir: "${binaryDir}/bin", quiet: true, failOnError: false)
+    ant.mkdir( dir: "${binaryDir}/bin" )
+
+    ant.copy( todir: binaryDir ) {
+        fileset( dir: "${installerPluginBase}/src/templates/jsmooth/" ) {
+           include( name: "*.jsmooth" )
+           include( name: "*.png" )
+        }
+    }
+    ant.move( file: "${binaryDir}/app.jsmooth", tofile: "${binaryDir}/${griffonAppName}.jsmooth" )
+    ant.replace( dir: binaryDir, includes: "*.jsmooth" ) {
+        replacefilter( token: "@app.name@", value:"${griffonAppName}" )
+        replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
+    }
+
+    event( "PrepareJsmoothLauncherEnd", [] )
+}
+
+setDefaultTarget(prepareJsmoothLauncher)
