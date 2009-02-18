@@ -11,7 +11,7 @@
          startup="no"
          target="$INSTALL_PATH/bin/@app.name@"
          commandLine=""
-         workingDirectory="$INSTALL_PATH/bin"
+         workingDirectory="/"
          description="Starts @app.name@"
          iconFile="exec"
          iconIndex="0"
