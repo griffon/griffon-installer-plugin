@@ -1,5 +1,5 @@
 class InstallerGriffonPlugin {
-    def version = '0.2'
+    def version = '0.2.1'
     def canBeGlobal = true
     def dependsOn = [:]
 
@@ -12,6 +12,7 @@ Supported formats are:
  - IzPack (universal)
  - RPM (Linux)
  - DMG (MacOSX)
+ - JSmooth (Windows)
 '''
 
     // URL to the plugin's documentation

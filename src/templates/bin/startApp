@@ -187,7 +187,7 @@ startApp ( ) {
     exec "$JAVACMD" $JAVA_OPTS \
          -Dgriffon.start.dir="$STARTDIR" \
          -classpath "$CLASSPATH" \
-         -Dprogram.name="$PROGNAME" \
+         -Dprogram.name="$GROOVY_APP_NAME" \
          $MAIN_CLASS
 }
 

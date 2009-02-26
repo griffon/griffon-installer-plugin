@@ -185,7 +185,7 @@ set CP=%CLASSPATH%;%CP%
 :after_cp
 
 if "%JAVA_OPTS%" == "" set JAVA_OPTS="-Xmx128m"
-set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%" -Dgriffon.start.dir="%DIRNAME\..\"
+set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%" -Dgriffon.start.dir="%DIRNAME%\.."
 
 @rem Execute App
 "%JAVA_EXE%" %JAVA_OPTS% -classpath "%CP%" griffon.application.SingleFrameApplication %CMD_LINE_ARGS%
