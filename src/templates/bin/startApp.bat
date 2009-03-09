@@ -1,9 +1,8 @@
 @if "%DEBUG%" == "" @echo off
 
-@rem Set local scope for the variables with windows NT shell
-if "%OS%"=="Windows_NT" setlocal
+setlocal enabledelayedexpansion
 
-set DIRNAME=%~1
+set DIRNAME=%~s1
 shift
 
 set CLASS=%~1
@@ -167,9 +166,9 @@ set CMD_LINE_ARGS=%$
 
 :execute
 @rem Setup the command line
-set LIBDIR="%DIRNAME%\..\lib"
-set CLASSPATH=""
-for %%J in ( %LIBDIR%\*.jar ) do call "%DIRNAME%\setCP.bat" %%J
+set LIBDIR="%DIRNAME%..\lib"
+set CLASSPATH=
+for %%i in (%LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
 
 @rem Setting a classpath using the -cp or -classpath option means not to use
 @rem the global classpath. Groovy behaves then the same as the java
@@ -185,10 +184,10 @@ set CP=%CLASSPATH%;%CP%
 :after_cp
 
 if "%JAVA_OPTS%" == "" set JAVA_OPTS="-Xmx128m"
-set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%" -Dgriffon.start.dir="%DIRNAME%\.."
+set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%" -Dgriffon.start.dir=%DIRNAME%..\
 
 @rem Execute App
-"%JAVA_EXE%" %JAVA_OPTS% -classpath "%CP%" griffon.application.SingleFrameApplication %CMD_LINE_ARGS%
+"%JAVA_EXE%" %JAVA_OPTS% -classpath %CP% griffon.application.SingleFrameApplication %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
