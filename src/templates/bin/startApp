@@ -131,7 +131,7 @@ fi
 # For Darwin, add GROOVY_APP_NAME to the JAVA_OPTS as -Xdock:name
 if $darwin; then
     JAVA_OPTS="$JAVA_OPTS -Xdock:name=$GROOVY_APP_NAME"
-# we may also want to set -Xdock:image    
+#    JAVA_OPTS="$JAVA_OPTS -Xdock:icon=$LIBDIR/@app.name@-@app.version@.jar!/griffon-icon-48x48.png"
 fi
 
 # For Cygwin, switch paths to Windows format before running java
@@ -183,7 +183,7 @@ startApp ( ) {
     CLASS=$1
     shift
     PWD=`pwd`
-    STARTDIR="${PWD}/${DIRNAME}/../"
+    STARTDIR="${DIRNAME}/../"
     exec "$JAVACMD" $JAVA_OPTS \
          -Dgriffon.start.dir="$STARTDIR" \
          -classpath "$CLASSPATH" \
