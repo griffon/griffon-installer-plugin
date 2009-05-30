@@ -13,15 +13,16 @@
     description="Run @app.name@"
     initialState="normal"
     programGroup="yes"
-    desktop="no"
-    applications="no"
+    desktop="yes"
+    iconFile="$INSTALL_PATH\icons\griffon-icon-32x32.png"
+    applications="yes"
     startMenu="no"
     startup="no">
   </shortcut>
 
   <shortcut
     name="Uninstall"
-    target="$INSTALL_PATH\\Uninstaller\uninstaller.jar"
+    target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
     commandLine=""
     workingDirectory="$INSTALL_PATH"
     description="Uninstall @app.name@"

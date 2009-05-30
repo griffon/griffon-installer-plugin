@@ -40,6 +40,7 @@ target(prepareBinary: "") {
     ant.mkdir( dir: "${binaryDir}" )
     ant.mkdir( dir: "${binaryDir}/lib" )
     ant.mkdir( dir: "${binaryDir}/bin" )
+    ant.mkdir( dir: "${binaryDir}/icons" )
 
     ant.copy( todir: "${binaryDir}/bin" ) {
         fileset( dir: "${installerPluginBase}/src/templates/bin" )
@@ -52,7 +53,10 @@ target(prepareBinary: "") {
     ant.move( file: "${binaryDir}/bin/app.run.bat", tofile: "${binaryDir}/bin/${griffonAppName}.bat" )
 
     ant.copy( todir: "${binaryDir}/lib" ) {
-        fileset( dir: "${basedir}/staging", excludes: "*.jnlp,applet.html,griffon.jpeg" )
+        fileset( dir: "${basedir}/staging", includes: "*.jar" )
+    }
+    ant.copy( todir: "${binaryDir}/icons" ) {
+        fileset( dir: "${basedir}/griffon-app/resources/", includes: "griffon-icon*" )
     }
 }
 
