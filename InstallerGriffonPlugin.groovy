@@ -5,9 +5,9 @@ class InstallerGriffonPlugin {
 
     def author = "Andres Almiray"
     def authorEmail = "aalmiray@users.sourceforge.net"
-    def title = "Allows creating installers for your Griffon application"
+    def title = "Creates installers for your Griffon application"
     def description = '''\
-Allows creating installers for your Griffon application.
+Creates installers for your Griffon application.
 Supported formats are:
  - IzPack (universal)
  - RPM (Linux)
