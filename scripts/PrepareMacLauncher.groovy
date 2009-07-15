@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
  */
 
 /**
- * Gant script that prepares an Dmg based installer
+ * Gant script that prepares a Mac application bundle.
  *
  * @author Andres Almiray
+ * @author Josh Reed
  *
- * @since 0.ant
+ * @since 0.4
  */
 
 ant.property(environment:"env")
@@ -27,17 +28,17 @@ griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_PrepareInstaller")
 
-target(prepareDmgInstaller: "Prepares an Dmg installer") {
-    depends( test_is_osx )
-    event( "PrepareDmgInstallerStart", [] )
+target(prepareMacLauncher: "Prepares a Mac launcher") {
+    event("PrepareMacLauncherStart", [])
 
-    installerWorkDir = "${basedir}/installer/dmg"
+    installerWorkDir = "${basedir}/installer/mac"
     binaryDir = installerWorkDir
-    prepareBinary()
 
-    event( "PrepareDmgInstallerEnd", [] )
+	ant.copy(file:"${installerPluginBase}/src/templates/jarbundler/JavaApplicationStub", tofile: "${binaryDir}/${griffonAppName}")
+	ant.copy(file:"${installerPluginBase}/src/templates/jarbundler/griffon.icns", tofile: "${binaryDir}/${griffonAppName}.icns")
+
+    event("PrepareMacLauncherEnd", [])
 }
 
-setDefaultTarget(prepareDmgInstaller)
+setDefaultTarget(prepareMacLauncher)

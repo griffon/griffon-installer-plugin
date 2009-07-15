@@ -181,7 +181,7 @@ fi
 
 startApp ( ) {
     CLASS=$1
-    shift
+#    shift
     PWD=`pwd`
     STARTDIR="${DIRNAME}/../"
     exec "$JAVACMD" $JAVA_OPTS \

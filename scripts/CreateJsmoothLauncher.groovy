@@ -31,13 +31,10 @@ installerWorkDir = "${basedir}/installer/jsmooth"
 skeletonsDir = installerPluginBase + "/src/templates/jsmooth/skeletons"
 binaryDir = installerWorkDir
 
-ant.path( id : 'installerJarSet' ) {
-    fileset( dir: "${installerPluginBase}/lib/installer", includes : "*.jar" )
+ant.path(id : 'installerJarSet') {
+    fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
 }
-
-ant.taskdef( name: "jsmoothgen",
-             classname: "net.charabia.jsmoothgen.ant.JSmoothGen",
-             classpathref: "installerJarSet" )
+ant.taskdef(name: "jsmoothgen", classname: "net.charabia.jsmoothgen.ant.JSmoothGen", classpathref: "installerJarSet")
 
 target(jsmoothSanityCheck:"") {
     depends(checkVersion, classpath, createStructure)
@@ -45,7 +42,7 @@ target(jsmoothSanityCheck:"") {
     if( src && src.list() ) {
         createJsmoothLauncher()
     } else {
-        println """No Jsmooth launcher sources were found.
+        println """No JSmooth launcher sources were found.
 Make sure you call 'griffon prepare-jsmooth-launcher' first
 and configure the files appropriately.
 """
@@ -53,20 +50,45 @@ and configure the files appropriately.
 }
 
 target(createJsmoothLauncher: "Creates a Jsmooth launcher") {
-    jardir = "${basedir}/staging" // TODO replace with correct build property
+	depends(checkVersion, packageApp, classpath)
+    packageApp()
+
+	event("CreateJsmoothLauncherStart", [])
+	
+	// clean up previous launchers
+	ant.delete(dir:"${installerWorkDir}/dist", quiet: true, failOnError: false)
+	ant.mkdir(dir:"${installerWorkDir}/dist")
+	ant.mkdir(dir:"${installerWorkDir}/dist/lib")
+	
+	// copy our jars from staging
+	ant.copy(todir:"${installerWorkDir}/dist/lib") {
+		fileset(dir: "${basedir}/staging", includes: "*.jar")
+	}
+	
+	// get our jars and inject into the JSmooth file
     def jarlist = []
-    new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
+    new File("${installerWorkDir}/dist/lib").eachFileMatch(~/.*\.jar/) { f ->
         jarlist << "<classPath>lib/${f.name}</classPath>"
     }
-    ant.replace( dir: binaryDir, includes: "*.jsmooth" ) {
+	ant.copy(file:"${installerWorkDir}/${griffonAppName}.jsmooth", tofile:"${installerWorkDir}/dist/${griffonAppName}.jsmooth")
+	ant.copy(file:"${installerWorkDir}/${griffonAppName}-icon.png", tofile:"${installerWorkDir}/dist/${griffonAppName}-icon.png")
+	ant.copy(file:"${installerWorkDir}/msvcr71.dll", tofile:"${installerWorkDir}/dist/msvcr71.dll")
+    ant.replace(dir: "${installerWorkDir}/dist", includes: "*.jsmooth" ) {
         replacefilter( token: "@app.jars@", value: jarlist.join('\n') )
     }
-    ant.jsmoothgen( project: "${installerWorkDir}/${griffonAppName}.jsmooth",
-                    skeletonroot: skeletonsDir )
-    def zipfile = "${installerWorkDir}/${griffonAppName}-windows-${griffonAppVersion}.zip"
-    ant.delete(file: zipfile, quiet: true, failOnError: false)
-    ant.zip( basedir: installerWorkDir,
-             destfile: zipfile )
+
+	// generate the launcher
+    ant.jsmoothgen(project: "${installerWorkDir}/dist/${griffonAppName}.jsmooth", skeletonroot: skeletonsDir)
+
+	// cleanup
+	ant.delete(file:"${installerWorkDir}/dist/${griffonAppName}.jsmooth")
+	ant.delete(file:"${installerWorkDir}/dist/${griffonAppName}-icon.png")
+
+	// generate a zip
+    ant.zip(basedir: "${installerWorkDir}/dist",
+            destfile: "${installerWorkDir}/dist/${griffonAppName}-windows-${griffonAppVersion}.zip")
+
+	event("CreateJsmoothLauncherEnd", [])
 }
 
 setDefaultTarget(jsmoothSanityCheck)

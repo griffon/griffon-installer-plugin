@@ -7,10 +7,10 @@
    <JVMSearchPath>jview</JVMSearchPath>
    <JVMSearchPath>registry</JVMSearchPath>
    @app.jars@
-   <currentDirectory>..</currentDirectory>
+   <currentDirectory>.</currentDirectory>
    <embeddedJar>false</embeddedJar>
-   <executableName>bin/@app.name@.exe</executableName>
-   <iconLocation>griffon-icon-32x32.png</iconLocation>
+   <executableName>@app.name@.exe</executableName>
+   <iconLocation>@app.name@-icon.png</iconLocation>
    <initialMemoryHeap>50331648</initialMemoryHeap>
    <javaProperties>
       <name>griffon.start.dir</name>

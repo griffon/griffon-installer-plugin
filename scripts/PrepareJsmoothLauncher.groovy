@@ -15,7 +15,7 @@
  */
 
 /**
- * Gant script that prepares an Jsmooth based installer
+ * Gant script that prepares an JSmooth-based installer
  *
  * @author Andres Almiray
  *
@@ -27,31 +27,23 @@ griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_PrepareInstaller")
 
-target(prepareJsmoothLauncher: "Prepares an Jsmooth launcher") {
-    event( "PrepareJsmoothLauncherStart", [] )
+target(prepareJsmoothLauncher: "Prepares a JSmooth-based launcher") {
+    event("PrepareJsmoothLauncherStart", [])
 
     installerWorkDir = "${basedir}/installer/jsmooth"
     binaryDir = installerWorkDir
 
-    prepareBinary()
-    ant.delete(dir: "${binaryDir}/bin", quiet: true, failOnError: false)
-    ant.mkdir( dir: "${binaryDir}/bin" )
-
-    ant.copy( todir: binaryDir ) {
-        fileset( dir: "${installerPluginBase}/src/templates/jsmooth/" ) {
-           include( name: "*.jsmooth" )
-           include( name: "*.png" )
-        }
-    }
-    ant.move( file: "${binaryDir}/app.jsmooth", tofile: "${binaryDir}/${griffonAppName}.jsmooth" )
-    ant.replace( dir: binaryDir, includes: "*.jsmooth" ) {
-        replacefilter( token: "@app.name@", value:"${griffonAppName}" )
-        replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
+    ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/app.jsmooth", tofile: "${binaryDir}/${griffonAppName}.jsmooth")
+	ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/griffon-icon-32x32.png", tofile: "${binaryDir}/${griffonAppName}-icon.png")
+	ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/msvcr71.dll", tofile: "${binaryDir}/msvcr71.dll")
+    
+    ant.replace(dir: binaryDir, includes: "*.jsmooth") {
+        replacefilter(token: "@app.name@", value:"${griffonAppName}")
+        replacefilter(token: "@app.version@", value:"${griffonAppVersion}")
     }
 
-    event( "PrepareJsmoothLauncherEnd", [] )
+    event("PrepareJsmoothLauncherEnd", [])
 }
 
 setDefaultTarget(prepareJsmoothLauncher)
