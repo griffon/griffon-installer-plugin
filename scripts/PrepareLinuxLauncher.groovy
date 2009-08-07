@@ -22,24 +22,24 @@
  * @since 0.4
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
-
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
+includeTargets << pluginScript("installer","_PrepareInstaller")
+
+installerWorkDir = "${basedir}/installer/linux"
+binaryDir = installerWorkDir
 
 target(prepareLinuxLauncher: "Prepares a Linux launcher") {
     event("PrepareLinuxLauncherStart", [])
 
-    installerWorkDir = "${basedir}/installer/linux"
-    binaryDir = installerWorkDir
+    ant.mkdir(dir: installerWorkDir)
 
-	ant.copy(file:"${installerPluginBase}/src/templates/bin/app.run", tofile: "${binaryDir}/${griffonAppName}")
-	ant.copy(file:"${installerPluginBase}/src/templates/bin/startApp", tofile: "${binaryDir}/startApp")
-	ant.replace(dir: "${binaryDir}") {
-        replacefilter( token: "@app.name@", value:"${griffonAppName}" )
-        replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
-    }
+//     ant.copy(file:"${installerPluginBase}/src/templates/bin/app.run", tofile: "${binaryDir}/${griffonAppName}")
+//     ant.copy(file:"${installerPluginBase}/src/templates/bin/startApp", tofile: "${binaryDir}/startApp")
+//     ant.replace(dir: "${binaryDir}") {
+//         replacefilter( token: "@app.name@", value:"${griffonAppName}" )
+//         replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
+//     }
 
     event("PrepareLinuxLauncherEnd", [])
 }

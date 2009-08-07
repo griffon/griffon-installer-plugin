@@ -23,18 +23,17 @@
  * @since 0.4
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
+includeTargets << griffonScript("_GriffonInit")
+installerPluginBase = getPluginDirForName('installer').file as String
+includeTargets << pluginScript("installer","_CreateInstaller")
 
-includeTargets << griffonScript("_GriffonPackage")
-installerPluginBase = getPluginDirForName("installer").file as String
 installerWorkDir = "${basedir}/installer/linux"
 binaryDir = installerWorkDir
 
 target(linuxLauncherSanityCheck:"") {
     depends(checkVersion, classpath, createStructure)
     def src = new File(installerWorkDir)
-    if (src && src.list()) {
+    if (src ) {
         createLinuxLauncher()
     } else {
         println """No Linux launcher sources were found.
@@ -45,30 +44,37 @@ and configure the files appropriately.
 }
 
 target(createLinuxLauncher: "Creates a Linux launcher") {
-	depends(checkVersion, packageApp, classpath)
+    depends(checkVersion, packageApp, classpath)
     packageApp()
 
-	event("CreateLinuxLauncherStart", [])
-	
-	// clean up old launchers
-	ant.delete(dir:"${installerWorkDir}/dist", quiet: true, failOnError: false)
-	ant.mkdir(dir:"${installerWorkDir}/dist")
-	
-	// copy files around
-	ant.mkdir(dir:"${installerWorkDir}/dist/bin")
-	ant.copy(file:"${installerWorkDir}/${griffonAppName}", tofile: "${binaryDir}/dist/bin/${griffonAppName}")
-	ant.copy(file:"${installerWorkDir}/startApp", tofile: "${installerWorkDir}/dist/bin/startApp")
-	
-	// copy our jars
-	ant.mkdir(dir:"${installerWorkDir}/dist/lib")
-	ant.copy(todir: "${installerWorkDir}/dist/lib") {
-        fileset(dir: "${basedir}/staging", includes: "*.jar")
-    }
-	
-	// create a zip
-	ant.zip(basedir: "${installerWorkDir}/dist", destfile: "${installerWorkDir}/dist/${griffonAppName}-linux-${griffonAppVersion}.zip")
+    event("CreateLinuxLauncherStart", [])
 
-	event("CreateLinuxLauncherEnd", [])	
+    // clean up old launchers
+    ant.delete(dir:"${installerWorkDir}/dist", quiet: true, failOnError: false)
+    ant.mkdir(dir:"${installerWorkDir}/dist")
+
+    copyLaunchScripts()
+    copyAppLibs()
+    ant.delete {
+        fileset(dir: "${binaryDir}/bin", includes: "*.bat")
+    }
+
+    // copy files around
+    ant.mkdir(dir:"${installerWorkDir}/dist/bin")
+    ant.copy(todir: "${installerWorkDir}/dist/bin") {
+        fileset(dir: "${binaryDir}/bin")
+    }
+
+    // copy our jars
+    ant.mkdir(dir:"${installerWorkDir}/dist/lib")
+    ant.copy(todir: "${installerWorkDir}/dist/lib") {
+        fileset(dir: "${binaryDir}/lib")
+    }
+
+    // create a zip
+    ant.zip(basedir: "${installerWorkDir}/dist", destfile: "${installerWorkDir}/dist/${griffonAppName}-linux-${griffonAppVersion}.zip")
+
+    event("CreateLinuxLauncherEnd", [])
 }
 
 setDefaultTarget(linuxLauncherSanityCheck)

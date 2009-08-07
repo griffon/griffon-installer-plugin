@@ -22,22 +22,20 @@
  * @since 0.1
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
-
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
+includeTargets << pluginScript("installer","_PrepareInstaller")
+
+installerWorkDir = "${basedir}/installer/jsmooth"
+binaryDir = installerWorkDir
 
 target(prepareJsmoothLauncher: "Prepares a JSmooth-based launcher") {
     event("PrepareJsmoothLauncherStart", [])
 
-    installerWorkDir = "${basedir}/installer/jsmooth"
-    binaryDir = installerWorkDir
-
     ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/app.jsmooth", tofile: "${binaryDir}/${griffonAppName}.jsmooth")
-	ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/griffon-icon-32x32.png", tofile: "${binaryDir}/${griffonAppName}-icon.png")
-	ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/msvcr71.dll", tofile: "${binaryDir}/msvcr71.dll")
-    
+    ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/griffon-icon-32x32.png", tofile: "${binaryDir}/${griffonAppName}-icon.png")
+    ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/msvcr71.dll", tofile: "${binaryDir}/msvcr71.dll")
+
     ant.replace(dir: binaryDir, includes: "*.jsmooth") {
         replacefilter(token: "@app.name@", value:"${griffonAppName}")
         replacefilter(token: "@app.version@", value:"${griffonAppVersion}")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2008-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,16 @@
  * @since 0.1
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
-
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
 installerWorkDir = "${basedir}/installer/izpack"
-resourcesDir = installerWorkDir + "/resources"
+includeTargets << pluginScript("installer","_CreateInstaller")
+
+installerWorkDir = "${basedir}/installer/izpack"
 binaryDir = installerWorkDir + "/binary"
 
-ant.path( id : 'installerJarSet' ) {
-    fileset( dir: "${installerPluginBase}/lib/installer", includes : "*.jar" )
+ant.path(id : "installerJarSet") {
+    fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
 }
 
 ant.taskdef( name: "izpack",
@@ -53,6 +52,8 @@ and configure the files appropriately.
 }
 
 target(createIzPackInstaller: "Creates an IzPack installer") {
+    copyAllAppArtifacts()
+
     ant.izpack( basedir: installerWorkDir,
                 input: "${installerWorkDir}/resources/installer.xml",
                 output: "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}-installer.jar",

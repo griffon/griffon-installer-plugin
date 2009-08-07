@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2008-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,16 @@
  * @since 0.1
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
-
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_PrepareInstaller")
+includeTargets << pluginScript("installer","_CreateInstaller")
+
 installerWorkDir = "${basedir}/installer/rpm"
+binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
 
 target(rpmSanityCheck:"") {
     depends(checkVersion, classpath, test_is_linux)
-    def src = new File( installerWorkDir )
+    def src = new File(installerWorkDir)
     if( src && src.list() ) {
         createRPMInstaller()
     } else {
@@ -44,6 +43,12 @@ and configure the files appropriately.
 }
 
 target(createRPMInstaller: "Creates an RPM installer") {
+
+    copyAllAppArtifacts()
+    ant.zip( destfile: "${installerWorkDir}/SOURCES/${griffonAppName}-${griffonAppVersion}-bin.zip",
+             basedir: installerWorkDir,
+             includes: "${griffonAppName}-${griffonAppVersion}/**/*" )
+
     ant.rpm( specFile: "${griffonAppName}.spec",
              topDir: installerWorkDir,
              cleanBuildDir: "false",

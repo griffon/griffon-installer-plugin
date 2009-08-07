@@ -23,25 +23,22 @@
  * @since 0.4
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
-
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << pluginScript("installer", "CreateJsmoothLauncher")
 
 target(createWindowsLauncher: "Create a Windows launcher") {
     event("CreateWindowsLauncherStart", [])
 
-	createJsmoothLauncher()
-	
-	// setup our windows dist
-	ant.delete(dir:"${basedir}/installer/windows/dist", quiet: true, failOnError: false)
-	ant.mkdir(dir:"${basedir}/installer/windows/dist")
-	
-	// copy files
-	ant.copy(todir:"${basedir}/installer/windows/dist") {
-		fileset(dir:"${basedir}/installer/jsmooth/dist", includes:"**")
-	}
+    createJsmoothLauncher()
+
+    // setup our windows dist
+    ant.delete(dir:"${basedir}/installer/windows/dist", quiet: true, failOnError: false)
+    ant.mkdir(dir:"${basedir}/installer/windows/dist")
+
+    // copy files
+    ant.copy(todir:"${basedir}/installer/windows/dist") {
+        fileset(dir:"${basedir}/installer/jsmooth/dist", includes:"**")
+    }
 
     event("CreateWindowsLauncherEnd", [])
 }
