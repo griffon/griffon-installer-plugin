@@ -26,7 +26,8 @@
 ant.property(environment:"env")
 griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
-includeTargets << griffonScript("CreateJsmoothLauncher")
+includeTargets << griffonScript("_GriffonInit")
+includeTargets << pluginScript("installer", "CreateJsmoothLauncher")
 
 target(createWindowsLauncher: "Create a Windows launcher") {
     event("CreateWindowsLauncherStart", [])

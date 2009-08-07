@@ -23,19 +23,20 @@
  *
  * @since 0.4
  */
+includeTargets << griffonScript("_GriffonInit")
 
 target(createAllLaunchers: "Creates all platform-specific launcher") {
 
-	includeTargets << griffonScript("CreateJarLauncher")
+	includeTargets << pluginScript("installer", "CreateJarLauncher")
 	createJarLauncher()
 	
-	includeTargets << griffonScript("CreateLinuxLauncher")	
+	includeTargets << pluginScript("installer", "CreateLinuxLauncher")	
 	createLinuxLauncher()
 		
-	includeTargets << griffonScript("CreateMacLauncher")	
+	includeTargets << pluginScript("installer", "CreateMacLauncher")	
 	createMacLauncher()	
 	
-	includeTargets << griffonScript("CreateWindowsLauncher")	
+	includeTargets << pluginScript("installer", "CreateWindowsLauncher")	
 	createWindowsLauncher()
 }
 

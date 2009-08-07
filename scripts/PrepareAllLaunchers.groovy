@@ -23,20 +23,21 @@
  *
  * @since 0.4
  */
+includeTargets << griffonScript("_GriffonInit")
 
 target(prepareAllLaunchers: "Prepares all platform-specific launcher") {
     event("PrepareAllLaunchersStart", [])
 
-	includeTargets << griffonScript("PrepareJarLauncher")
+	includeTargets << pluginScript("installer", "PrepareJarLauncher")
 	prepareJarLauncher()
 
-	includeTargets << griffonScript("PrepareLinuxLauncher")	
+	includeTargets << pluginScript("installer", "PrepareLinuxLauncher")	
 	prepareLinuxLauncher()
 	
-	includeTargets << griffonScript("PrepareMacLauncher")
+	includeTargets << pluginScript("installer", "PrepareMacLauncher")
 	prepareMacLauncher()
 	
-	includeTargets << griffonScript("PrepareWindowsLauncher")	
+	includeTargets << pluginScript("installer", "PrepareWindowsLauncher")	
 	prepareWindowsLauncher()
     event("PrepareAllLaunchersEnd", [])
 }
