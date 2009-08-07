@@ -22,6 +22,8 @@
  * @since 0.1
  */
 
+import static griffon.util.GriffonApplicationUtils.isMacOSX
+
 ant.property(environment:"env")
 griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
 
@@ -31,11 +33,30 @@ installerPluginBase = getPluginDirForName('installer').file as String
 // These will be set by caller script
 // installerWorkDir = "${basedir}/installer/izpack"
 // binaryDir = installerWorkDir + "/binary"
+appMainClass = "griffon.application.SingleFrameApplication"
 
 target(prepareBinary: "") {
     depends(checkVersion, packageApp, classpath)
 
     packageApp()
+    def javaOpts = []
+    if (config.griffon.memory?.min) {
+        javaOpts << "-Xms$config.griffon.memory.min"
+    }
+    if (config.griffon.memory?.max) {
+        javaOpts << "-Xmx$config.griffon.memory.max"
+    }
+    if (config.griffon.memory?.maxPermSize) {
+        javaOpts << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
+    }
+    if (isMacOSX) {
+        javaOpts << "-Xdock:name=$griffonAppName"
+        javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
+    }
+    if (config.griffon.app?.javaOpts) {
+      config.griffon.app?.javaOpts.each { javaOpts << it }
+    }
+    javaOpts = javaOpts ? javaOpts.join(' ') : ""
 
     ant.mkdir( dir: "${binaryDir}" )
     ant.mkdir( dir: "${binaryDir}/lib" )
@@ -46,8 +67,10 @@ target(prepareBinary: "") {
         fileset( dir: "${installerPluginBase}/src/templates/bin" )
     }
     ant.replace( dir: "${binaryDir}/bin" ) {
-        replacefilter( token: "@app.name@", value:"${griffonAppName}" )
-        replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
+        replacefilter(token: "@app.name@", value: griffonAppName)
+        replacefilter(token: "@app.version@", value: griffonAppVersion)
+        replacefilter(token: "@app.java.opts@", value: javaOpts)
+        replacefilter(token: "@app.main.class@", value: appMainClass)
     }
     ant.move( file: "${binaryDir}/bin/app.run", tofile: "${binaryDir}/bin/${griffonAppName}" )
     ant.move( file: "${binaryDir}/bin/app.run.bat", tofile: "${binaryDir}/bin/${griffonAppName}.bat" )

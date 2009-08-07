@@ -1,7 +1,7 @@
 <plugin name='installer' version='0.4' jdk='1.5'>
-  <author>Andres Almiray</author>
-  <authorEmail>aalmiray@users.sourceforge.net</authorEmail>
-  <title>Creates installers for your Griffon application</title>
+  <author>Andres Almiray, Josh Reed</author>
+  <authorEmail>aalmiray@users.sourceforge.net, jareed@andrill.org</authorEmail>
+  <title>Creates launchers and installers for your Griffon application</title>
   <documentation>http://griffon.codehaus.org/Installer+Plugin</documentation>
   <dependencies />
 </plugin>

@@ -128,6 +128,7 @@ if [ "$cygwin" = "false" -a "$darwin" = "false" ] ; then
     fi
 fi
 
+JAVA_OPTS="@app.java.opts@"
 # For Darwin, add GROOVY_APP_NAME to the JAVA_OPTS as -Xdock:name
 if $darwin; then
     JAVA_OPTS="$JAVA_OPTS -Xdock:name=$GROOVY_APP_NAME"
@@ -191,6 +192,6 @@ startApp ( ) {
          $MAIN_CLASS
 }
 
-MAIN_CLASS=griffon.application.SingleFrameApplication
+MAIN_CLASS=@app.main.class@
 
 lateInit

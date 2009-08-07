@@ -183,11 +183,12 @@ if "x" == "x%CLASSPATH%" goto after_cp
 set CP=%CLASSPATH%;%CP%
 :after_cp
 
+set JAVA_OPTS="@app.java.opts@"
 if "%JAVA_OPTS%" == "" set JAVA_OPTS="-Xmx128m"
 set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%" -Dgriffon.start.dir=%DIRNAME%..\
 
 @rem Execute App
-"%JAVA_EXE%" %JAVA_OPTS% -classpath %CP% griffon.application.SingleFrameApplication %CMD_LINE_ARGS%
+"%JAVA_EXE%" %JAVA_OPTS% -classpath %CP% @app.main.class@ %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
