@@ -22,11 +22,12 @@
  * @since 0.4
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
-
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
+includeTargets << pluginScript("installer","_PrepareInstaller")
+
+installerWorkDir = "${basedir}/installer/jar"
+binaryDir = installerWorkDir
 
 target(prepareJarLauncher: "Prepares a JAR launcher") {
     event("PrepareJarLauncherStart", [])
@@ -34,10 +35,10 @@ target(prepareJarLauncher: "Prepares a JAR launcher") {
     installerWorkDir = "${basedir}/installer/jar"
     binaryDir = installerWorkDir
 
-	ant.mkdir(dir: installerWorkDir)
-	ant.manifest(file:"${installerWorkDir}/MANIFEST.MF") {
-		attribute(name: "Main-Class", value: "griffon.application.SingleFrameApplication")
-	}
+    ant.mkdir(dir: installerWorkDir)
+    ant.manifest(file:"${installerWorkDir}/MANIFEST.MF") {
+        attribute(name: "Main-Class", value: appMainClass)
+    }
 
     event("PrepareJarLauncherEnd", [])
 }

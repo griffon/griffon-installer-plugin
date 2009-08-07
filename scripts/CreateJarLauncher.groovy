@@ -23,11 +23,11 @@
  * @since 0.4
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
+includeTargets << griffonScript("_GriffonInit")
+installerPluginBase = getPluginDirForName('installer').file as String
+installerWorkDir = "${basedir}/installer/izpack"
+includeTargets << pluginScript("installer","_CreateInstaller")
 
-includeTargets << griffonScript("_GriffonPackage")
-installerPluginBase = getPluginDirForName("installer").file as String
 installerWorkDir = "${basedir}/installer/jar"
 binaryDir = installerWorkDir
 
@@ -45,26 +45,25 @@ and configure the files appropriately.
 }
 
 target(createJarLauncher: "Creates a single executable JAR") {
-	depends(checkVersion, packageApp, classpath)
-    packageApp()
+    copyAllAppArtifacts()
 
-	event("CreateJarLauncherStart", [])
-	
-	// delete
-	ant.delete(dir:"${installerWorkDir}/classes", quiet: true, failOnError: false)
-	ant.delete(dir:"${installerWorkDir}/dist", quiet: true, failOnError: false)
-	ant.mkdir(dir:"${installerWorkDir}/classes")
-	ant.mkdir(dir:"${installerWorkDir}/dist")
-	
-	// unzip our jars
-	ant.unjar(dest:"${installerWorkDir}/classes", overwrite: true) {
-		fileset(dir: "${basedir}/staging", includes:"*.jar")
-	}
-	
-	// create a single jar
-	ant.jar(basedir: "${installerWorkDir}/classes", destfile:"${installerWorkDir}/dist/${griffonAppName}-${griffonAppVersion}.jar", index: "true", manifest:"${installerWorkDir}/MANIFEST.MF")
-	
-	event("CreateJarLauncherEnd", [])
+    event("CreateJarLauncherStart", [])
+
+    // delete
+    ant.delete(dir:"${installerWorkDir}/classes", quiet: true, failOnError: false)
+    ant.delete(dir:"${installerWorkDir}/dist", quiet: true, failOnError: false)
+    ant.mkdir(dir:"${installerWorkDir}/classes")
+    ant.mkdir(dir:"${installerWorkDir}/dist")
+
+    // unzip our jars
+    ant.unjar(dest:"${installerWorkDir}/classes", overwrite: true) {
+        fileset(dir: "${basedir}/staging", includes: "**/*.jar")
+    }
+
+    // create a single jar
+    ant.jar(basedir: "${installerWorkDir}/classes", destfile:"${installerWorkDir}/dist/${griffonAppName}-${griffonAppVersion}.jar", index: "true", manifest:"${installerWorkDir}/MANIFEST.MF")
+
+    event("CreateJarLauncherEnd", [])
 }
 
 setDefaultTarget(jarLauncherSanityCheck)

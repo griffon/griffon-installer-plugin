@@ -23,11 +23,10 @@
  * @since 0.4
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
+includeTargets << griffonScript("_GriffonInit")
+installerPluginBase = getPluginDirForName('installer').file as String
+includeTargets << pluginScript("installer","_CreateInstaller")
 
-includeTargets << griffonScript("_GriffonPackage")
-installerPluginBase = getPluginDirForName("installer").file as String
 installerWorkDir = "${basedir}/installer/mac"
 binaryDir = installerWorkDir
 
@@ -50,38 +49,38 @@ and configure the files appropriately.
 }
 
 target(createMacLauncher: "Creates a Mac launcher") {
-	depends(checkVersion, packageApp, classpath)
+    depends(checkVersion, packageApp, classpath)
     packageApp()
 
-	event("CreateMacLauncherStart", [])
-	
-	// clean up old launchers
-	ant.delete(dir:"${installerWorkDir}/dist", quiet: true, failOnError: false)
-	ant.mkdir(dir:"${installerWorkDir}/dist")
-	
-	// create an app bundle
-	ant.jarbundler(dir: "${installerWorkDir}/dist", name:"${griffonAppName}", mainclass:"griffon.application.SingleFrameApplication",
-		stubfile:"${installerWorkDir}/${griffonAppName}", version:"${griffonAppVersion}", icon: "${installerWorkDir}/${griffonAppName}.icns") {
-		jarfileset(dir: "${basedir}/staging", includes:"*.jar")
-	}
-	
-	// create a DMG if on a Mac
-	ant.condition(property: "os.isOSX", value: true) {
+    event("CreateMacLauncherStart", [])
+
+    // clean up old launchers
+    ant.delete(dir:"${installerWorkDir}/dist", quiet: true, failOnError: false)
+    ant.mkdir(dir:"${installerWorkDir}/dist")
+
+    // create an app bundle
+    ant.jarbundler(dir: "${installerWorkDir}/dist", name:"${griffonAppName}", mainclass: appMainClass,
+        stubfile:"${installerWorkDir}/${griffonAppName}", version:"${griffonAppVersion}", icon: "${installerWorkDir}/${griffonAppName}.icns") {
+        jarfileset(dir: "${basedir}/staging", includes:"*.jar")
+    }
+
+    // create a DMG if on a Mac
+    ant.condition(property: "os.isOSX", value: true) {
         and {
             os(family: "mac")
             and { os(family: "unix") }
         }
     }
-	if (Boolean.valueOf(ant.project.properties.'os.isOSX')) {
-		ant.exec(executable: "hdiutil") {
-	       arg(line:"create -srcfolder ${installerWorkDir}/dist ${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg" )
-	    }
-		ant.move(file:"${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg", tofile:"${installerWorkDir}/dist/${griffonAppName}-${griffonAppVersion}.dmg")
-	} else {
-		ant.echo(message:"Skipping DMG file creation as it requires the build be run on Mac OS X")
-	}
+    if (Boolean.valueOf(ant.project.properties.'os.isOSX')) {
+        ant.exec(executable: "hdiutil") {
+           arg(line:"create -srcfolder ${installerWorkDir}/dist ${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg" )
+        }
+        ant.move(file:"${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg", tofile:"${installerWorkDir}/dist/${griffonAppName}-${griffonAppVersion}.dmg")
+    } else {
+        ant.echo(message:"Skipping DMG file creation as it requires the build be run on Mac OS X")
+    }
 
-	event("CreateMacLauncherEnd", [])	
+    event("CreateMacLauncherEnd", [])
 }
 
 setDefaultTarget(macLauncherSanityCheck)

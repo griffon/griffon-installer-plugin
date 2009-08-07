@@ -10,8 +10,9 @@ class InstallerGriffonPlugin {
 Creates launchers and installers for your Griffon application.
 Supported formats are:
  - IzPack (universal)
+ - Single jar (universal)
  - RPM (Linux)
- - DMG (MacOSX)
+ - AppBundle (MacOSX)
  - JSmooth (Windows)
 '''
 

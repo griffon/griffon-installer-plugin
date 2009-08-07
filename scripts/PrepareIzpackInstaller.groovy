@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2008-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,29 +22,27 @@
  * @since 0.1
  */
 
-ant.property(environment:"env")
-griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
-
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
 includeTargets << pluginScript("installer","_PrepareInstaller")
 
+installerWorkDir = "${basedir}/installer/izpack"
+binaryDir = installerWorkDir + "/binary"
+
 target(prepareIzPackInstaller: "Prepares an IzPack installer") {
     event( "PrepareIzpackInstallerStart", [] )
 
-    installerWorkDir = "${basedir}/installer/izpack"
     resourcesDir = installerWorkDir + "/resources"
-    binaryDir = installerWorkDir + "/binary"
 
     ant.copy( todir: resourcesDir ) {
         fileset( dir: "${installerPluginBase}/src/templates/izpack" )
     }
-    ant.replace( dir: resourcesDir, includes: "*.xml,*.html,*.txt" ) {
+    ant.replace( dir: resourcesDir, includes: "*.xml,*.html,*.txt,*properties" ) {
         replacefilter( token: "@app.name@", value:"${griffonAppName}" )
         replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
     }
 
-    prepareBinary()
+    prepareDirectories()
     event( "PrepareIzpackInstallerEnd", [] )
 }
 
