@@ -19,7 +19,7 @@
  * @author Josh Reed
  */
 class InstallerGriffonPlugin {
-    def version = '0.4'
+    def version = '0.5'
     def canBeGlobal = true
     def dependsOn = [:]
 
@@ -30,7 +30,6 @@ class InstallerGriffonPlugin {
 Creates launchers and installers for your Griffon application.
 Supported formats are:
  - IzPack (universal)
- - Single jar (universal)
  - RPM (Linux)
  - AppBundle (MacOSX)
  - JSmooth (Windows)
