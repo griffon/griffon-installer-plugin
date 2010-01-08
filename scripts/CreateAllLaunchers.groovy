@@ -27,9 +27,6 @@ includeTargets << griffonScript("_GriffonInit")
 
 target(createAllLaunchers: "Creates all platform-specific launcher") {
 
-    includeTargets << pluginScript("installer", "CreateJarLauncher")
-    createJarLauncher()
-
     includeTargets << pluginScript("installer", "CreateLinuxLauncher")
     createLinuxLauncher()
 
