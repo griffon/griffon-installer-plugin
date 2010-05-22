@@ -26,10 +26,12 @@
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << pluginScript("installer", "PrepareJsmoothLauncher")
 
+target('default': "Prepares a Windows launcher") {
+    prepareWindowsLauncher()
+}
+
 target(prepareWindowsLauncher: "Prepares a Windows launcher") {
     event("PrepareWindowsLauncherStart", [])
     prepareJsmoothLauncher()
     event("PrepareWindowsLauncherEnd", [])
 }
-
-setDefaultTarget(prepareWindowsLauncher)

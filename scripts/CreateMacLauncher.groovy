@@ -25,44 +25,68 @@
 
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_CreateInstaller")
-
-installerWorkDir = "${basedir}/installer/mac"
-binaryDir = installerWorkDir
+includeTargets << pluginScript("installer","_CreateLauncher")
 
 ant.path(id : 'installerJarSet') {
     fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
 }
-ant.taskdef(name: "jarbundler", classname: "net.sourceforge.jarbundler.JarBundler", classpathref: "installerJarSet")
+ant.taskdef(name: "jarbundler",
+            classname: "net.sourceforge.jarbundler.JarBundler",
+            classpathref: "installerJarSet")
+
+target('default': "Creates a Mac launcher") {
+    createMacLauncher()
+}
 
 target(macLauncherSanityCheck:"") {
-    depends(checkVersion, classpath, createStructure)
-    def src = new File(installerWorkDir)
-    if (src && src.list()) {
-        createMacLauncher()
-    } else {
+    depends(checkVersion, classpath)
+
+	installerWorkDir = "${projectTargetDir}/installer/mac/dist"
+	binaryDir = installerWorkDir
+	ant.mkdir(dir: installerWorkDir)
+	
+    def src = new File("${installerWorkDir}/../")
+    if (!src.list()) {
         println """No Mac launcher sources were found.
 Make sure you call 'griffon prepare-mac-launcher' first
 and configure the files appropriately.
 """
+        System.exit(1)
     }
 }
 
 target(createMacLauncher: "Creates a Mac launcher") {
-    depends(checkVersion, packageApp, classpath)
-    packageApp()
+    depends(macLauncherSanityCheck)
 
     event("CreateMacLauncherStart", [])
 
     // clean up old launchers
-    ant.delete(dir:"${installerWorkDir}/dist", quiet: true, failOnError: false)
-    ant.mkdir(dir:"${installerWorkDir}/dist")
+    ant.delete(dir: installerWorkDir, quiet: true, failOnError: false)
+    ant.mkdir(dir: installerWorkDir)
+    copyAllAppArtifacts()
+
+    def iconFile = new File("${installerWorkDir}/${griffonAppName}.icns")
+    if(!iconFile.exists()) iconFile = new File("${installerWorkDir}/griffon.icns")
+
+    def bundleDir = installerWorkDir + '/bundle'
+    ant.mkdir(dir: bundleDir)
 
     // create an app bundle
-    ant.jarbundler(dir: "${installerWorkDir}/dist", name:"${griffonAppName}", mainclass: appMainClass,
-        stubfile:"${installerWorkDir}/${griffonAppName}", version:"${griffonAppVersion}", icon: "${installerWorkDir}/${griffonAppName}.icns") {
-        jarfileset(dir: "${basedir}/staging", includes:"*.jar")
+    ant.jarbundler(dir: bundleDir,
+                   name: griffonAppName,
+                   mainclass: griffonApplicationClass,
+                   stubfile: "${installerWorkDir}/../${griffonAppName}",
+                   version: griffonAppVersion,
+                   icon: iconFile.absolutePath) {
+        jarfileset(dir: "${installerWorkDir}/lib", includes: "*.jar")
     }
+
+    def distDir = 'dist/mac'
+    ant.delete(dir: distDir, quiet: true, failonerror: false)
+    ant.mkdir(dir: distDir)
+    ant.copy(todir: distDir) {
+	    fileset(dir: bundleDir)
+	}
 
     // create a DMG if on a Mac
     ant.condition(property: "os.isOSX", value: true) {
@@ -73,14 +97,12 @@ target(createMacLauncher: "Creates a Mac launcher") {
     }
     if (Boolean.valueOf(ant.project.properties.'os.isOSX')) {
         ant.exec(executable: "hdiutil") {
-           arg(line:"create -srcfolder ${installerWorkDir}/dist ${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg" )
+           arg(line:"create -srcfolder ${bundleDir} ${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg" )
         }
-        ant.move(file:"${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg", tofile:"${installerWorkDir}/dist/${griffonAppName}-${griffonAppVersion}.dmg")
+	    ant.copy(todir: distDir, file: "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg")
     } else {
         ant.echo(message:"Skipping DMG file creation as it requires the build be run on Mac OS X")
     }
 
     event("CreateMacLauncherEnd", [])
 }
-
-setDefaultTarget(macLauncherSanityCheck)

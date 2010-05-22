@@ -16,24 +16,44 @@
 
 /**
  * @author Josh Reed
+ * @author Andres Almiray
  */
 
+if(!isPluginProject) {	
+    includeTargets << griffonScript('_PluginDependencies')
+	['Izpack', 'Rpm', 'Mac', 'Windows'] .each { type ->
+	    includePluginScript('installer', 'Prepare'+ type +'Launcher')
+	    includePluginScript('installer', 'Create'+ type +'Launcher')
+	}
+}
+
 eventCleanEnd = {
-	// jar
-	ant.delete(dir:"${basedir}/installer/jar/dist", failonerror:false)
-	ant.delete(dir:"${basedir}/installer/jar/classes", failonerror:false)
-	
-	// jsmooth
-	ant.delete(dir:"${basedir}/installer/jsmooth/dist", failonerror:false)
-	
-	// linux
-	ant.delete(dir:"${basedir}/installer/linux/dist", failonerror:false)
-	
-	// mac
-	ant.delete(dir:"${basedir}/installer/mac/dist", failonerror:false)
-	
-	// windows
-	ant.delete(dir:"${basedir}/installer/windows/dist", failonerror:false)
-	
-	// TODO handle izpack and rpm
+    ant.delete(dir: "${projectTargetDir}/installer/")
+}
+
+eventMakePackage = { type ->
+    switch(type.toUpperCase()) {
+	    case 'IZPACK':
+	    case 'UNIVERSAL':
+	        packageLauncher('Izpack')
+	        break
+	    case 'MAC':
+		case 'DMG':
+		    packageLauncher('Mac')
+			break
+	    case 'RPM':
+		    packageLauncher('Rpm')
+			break
+	    case 'WINDOWS':
+		case 'JSMOOTH':
+		    packageLauncher('Windows')
+			break
+    }
+}
+
+packageLauncher = { type ->
+	includeTargets.binding.with {
+        getVariable("prepare${type}Launcher")()
+        getVariable("create${type}Launcher")()
+    }
 }

@@ -23,21 +23,22 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript('_GriffonInit')
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_PrepareInstaller")
+includeTargets << pluginScript('installer','_PrepareLauncher')
 
-installerWorkDir = "${basedir}/installer/mac"
-binaryDir = installerWorkDir
+target('default': "Prepares a Mac launcher") {
+    prepareMacLauncher()
+}
 
 target(prepareMacLauncher: "Prepares a Mac launcher") {
     event("PrepareMacLauncherStart", [])
 
+	installerWorkDir = "${projectTargetDir}/installer/mac"
+	binaryDir = installerWorkDir
+	
     ant.mkdir(dir: installerWorkDir)
     ant.copy(file:"${installerPluginBase}/src/templates/jarbundler/JavaApplicationStub", tofile: "${binaryDir}/${griffonAppName}")
-    ant.copy(file:"${installerPluginBase}/src/templates/jarbundler/griffon.icns", tofile: "${binaryDir}/${griffonAppName}.icns")
 
     event("PrepareMacLauncherEnd", [])
 }
-
-setDefaultTarget(prepareMacLauncher)

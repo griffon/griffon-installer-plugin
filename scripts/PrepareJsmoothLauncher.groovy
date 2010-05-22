@@ -24,14 +24,19 @@
 
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_PrepareInstaller")
+includeTargets << pluginScript("installer","_PrepareLauncher")
 
-installerWorkDir = "${basedir}/installer/jsmooth"
-binaryDir = installerWorkDir
+target('default': "Prepares a JSmooth-based launcher") {
+    prepareJsmoothLauncher()
+}
 
 target(prepareJsmoothLauncher: "Prepares a JSmooth-based launcher") {
     event("PrepareJsmoothLauncherStart", [])
 
+	installerWorkDir = "${projectTargetDir}/installer/jsmooth"
+	binaryDir = installerWorkDir
+	installerPluginBase = getPluginDirForName('installer').file as String
+	
     ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/app.jsmooth", tofile: "${binaryDir}/${griffonAppName}.jsmooth")
     ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/griffon-icon-32x32.png", tofile: "${binaryDir}/${griffonAppName}-icon.png")
     ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/msvcr71.dll", tofile: "${binaryDir}/msvcr71.dll")
@@ -43,5 +48,3 @@ target(prepareJsmoothLauncher: "Prepares a JSmooth-based launcher") {
 
     event("PrepareJsmoothLauncherEnd", [])
 }
-
-setDefaultTarget(prepareJsmoothLauncher)
