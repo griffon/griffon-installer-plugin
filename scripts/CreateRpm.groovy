@@ -33,6 +33,7 @@ target('default': "Creates an RPM installer") {
 target(rpmSanityCheck:"") {
     depends(checkVersion, classpath)//, test_is_linux)
 
+    packageType = 'rpm'
     installerWorkDir = "${projectTargetDir}/installer/rpm"
     binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
 
@@ -54,10 +55,10 @@ target(createRpm: "Creates an RPM installer") {
     ant.replace(dir: "${installerWorkDir}/SPECS") {
         replacefilter(token: "@app.name@", value: griffonAppName)
         replacefilter(token: "@app.version@", value: griffonAppVersion)
-        replacefilter( token: "@app.license@", value: 'unknown' )
-        replacefilter( token: "@app.url@", value: 'unknown' )
-        replacefilter( token: "@app.description@", value: 'unknown' )
-        replacefilter( token: "@app.summary@", value: griffonAppName )
+        replacefilter(token: "@app.license@", value: 'unknown')
+        replacefilter(token: "@app.url@", value: 'unknown')
+        replacefilter(token: "@app.description@", value: 'unknown')
+        replacefilter(token: "@app.summary@", value: griffonAppName)
     }
 
     ant.zip(destfile: "${installerWorkDir}/SOURCES/${griffonAppName}-${griffonAppVersion}-bin.zip",

@@ -41,6 +41,7 @@ target('default': "Creates a Mac launcher") {
 target(macSanityCheck:"") {
     depends(checkVersion, classpath)
 
+    packageType = 'mac'
     installerWorkDir = "${projectTargetDir}/installer/mac/dist"
     binaryDir = installerWorkDir
     ant.mkdir(dir: installerWorkDir)

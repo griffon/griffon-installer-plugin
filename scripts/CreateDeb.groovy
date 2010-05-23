@@ -40,6 +40,7 @@ target('default': "Creates a .deb package") {
 target('debSanityCheck':'') {    
     depends(checkVersion, classpath)
 
+    packageType = 'deb'
     installerWorkDir = "${projectTargetDir}/installer/deb"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesdir = installerWorkDir + '/resources'
@@ -91,6 +92,7 @@ Please update the name of your application with the aforementioned guidelines by
                     synopsis: ant.antProject.properties."deb.synopsis")
         tarfileset(dir: binaryDir, prefix: "usr/share/${packageName}") {
             exclude(name: 'bin/**')
+            exclude(name: '*.icns')
         }
         tarfileset(dir: "${binaryDir}/bin", prefix: "usr/share/${packageName}/bin", filemode: '755') {
             exclude(name: '*.bat')

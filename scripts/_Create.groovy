@@ -29,8 +29,9 @@ includeTargets << griffonScript("Package")
 includeTargets << pluginScript("installer","_Prepare")
 
 target(copyAllAppArtifacts: "") {
-   depends(checkVersion)
-   
+   depends(checkVersion, createConfig)
+
+   distDir = config.griffon.dist.dir ?: "${basedir}/dist"
    targetDistDir = binaryDir
    System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
 

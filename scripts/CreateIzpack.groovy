@@ -41,6 +41,7 @@ target('default': "Creates an IzPack installer") {
 target('izpackSanityCheck':'') {    
     depends(checkVersion, classpath)
 
+    packageType = 'izpack'
     installerWorkDir = "${projectTargetDir}/installer/izpack"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'

@@ -40,6 +40,7 @@ target('default': "Creates a Jsmooth launcher") {
 target(jsmoothSanityCheck:"") {
     depends(checkVersion, classpath)
 
+    packageType = 'jsmooth'
     installerDir = "${projectTargetDir}/installer/jsmooth"
     installerWorkDir = "${installerDir}/dist"
     skeletonsDir = installerPluginBase + "/src/templates/jsmooth/skeletons"

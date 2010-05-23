@@ -52,17 +52,23 @@ Packager:       %packer
 %prep
 %setup -n @app.name@-@app.version@
 rm bin/*.bat
+rm griffon.icns
 
 %build
 echo "nothing to compile"
 
 %install
-install -d $RPM_BUILD_ROOT/usr/local/share/@app.name@/bin
-install -p bin/* $RPM_BUILD_ROOT/usr/local/share/@app.name@/bin
-install -d $RPM_BUILD_ROOT/usr/local/share/@app.name@/lib
-install -p lib/* $RPM_BUILD_ROOT/usr/local/share/@app.name@/lib
-install -d $RPM_BUILD_ROOT/usr/local/share/@app.name@/icons
-install -p icons/* $RPM_BUILD_ROOT/usr/local/share/@app.name@/icons
+install -d $RPM_BUILD_ROOT/usr/local/share/@app.name@/
+for entry in `ls .`
+do
+    if (test -d ${entry}) then
+        install -d $RPM_BUILD_ROOT/usr/local/share/@app.name@/$entry
+        install -p ${entry}/* $RPM_BUILD_ROOT/usr/local/share/@app.name@/$entry
+    fi
+    if (test -f ${entry}) then
+        install -p ${entry} $RPM_BUILD_ROOT/usr/local/share/@app.name@/$entry
+    fi
+done
 
 %clean
 rm -rf "$RPM_BUILD_ROOT"
