@@ -24,27 +24,23 @@
 
 includeTargets << griffonScript('_GriffonInit')
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript('installer','_PrepareLauncher')
+includeTargets << pluginScript('installer','_Prepare')
 
 target('default': 'Prepares an IzPack installer') {
-	prepareIzpackLauncher()
+    prepareIzpack()
 }
-	
-target('prepareIzpackLauncher': 'Prepares an IzPack installer') {
-    event('PrepareIzpackLauncherStart', [])
+    
+target('prepareIzpack': 'Prepares an IzPack installer') {
+    event('PrepareIzpackStart', [])
 
-	installerWorkDir = "${projectTargetDir}/installer/izpack"
-	binaryDir = installerWorkDir + '/binary'
-    resourcesDir = installerWorkDir + '/resources'
+    installerWorkDir = "${projectTargetDir}/installer/izpack"
+    binaryDir = installerWorkDir + '/binary'
+    installerResourcesDir = installerWorkDir + '/resources'
 
-    ant.copy(todir: resourcesDir) {
+    ant.copy(todir: installerResourcesDir) {
         fileset(dir: "${installerPluginBase}/src/templates/izpack")
-    }
-    ant.replace(dir: resourcesDir, includes: '*.xml,*.html,*.txt,*properties') {
-        replacefilter(token: '@app.name@', value: griffonAppName)
-        replacefilter(token: '@app.version@', value: griffonAppVersion)
     }
 
     prepareDirectories()
-    event('PrepareIzpackLauncherEnd', [])
+    event('PrepareIzpackEnd', [])
 }

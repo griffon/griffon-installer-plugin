@@ -42,7 +42,7 @@ target(test_is_linux: "") {
             and { os( name: "Linux" ) }
         }
     }
-    ant.echo(message: "You are running ${ant.properties.'os.name'} ${ant.properties.'os.arch'} ${ant.properties.'os.version'}")	
+    ant.echo(message: "You are running ${ant.properties.'os.name'} ${ant.properties.'os.arch'} ${ant.properties.'os.version'}")    
     ant.fail(message: "You are not running on Linux", unless: "os.isLinux")
 }
 

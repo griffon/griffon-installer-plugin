@@ -19,12 +19,12 @@
  * @author Andres Almiray
  */
 
-if(!isPluginProject) {	
+if(!isPluginProject) {    
     includeTargets << griffonScript('_PluginDependencies')
-	['Izpack', 'Rpm', 'Mac', 'Windows'] .each { type ->
-	    includePluginScript('installer', 'Prepare'+ type +'Launcher')
-	    includePluginScript('installer', 'Create'+ type +'Launcher')
-	}
+    ['Izpack', 'Rpm', 'Deb', 'Mac', 'Windows'] .each { type ->
+        includePluginScript('installer', 'Prepare'+ type)
+        includePluginScript('installer', 'Create'+ type)
+    }
 }
 
 eventCleanEnd = {
@@ -33,27 +33,30 @@ eventCleanEnd = {
 
 eventMakePackage = { type ->
     switch(type.toUpperCase()) {
-	    case 'IZPACK':
-	    case 'UNIVERSAL':
-	        packageLauncher('Izpack')
-	        break
-	    case 'MAC':
-		case 'DMG':
-		    packageLauncher('Mac')
-			break
-	    case 'RPM':
-		    packageLauncher('Rpm')
-			break
-	    case 'WINDOWS':
-		case 'JSMOOTH':
-		    packageLauncher('Windows')
-			break
+        case 'IZPACK':
+        case 'UNIVERSAL':
+            buildPackage('Izpack')
+            break
+        case 'MAC':
+        case 'DMG':
+            buildPackage('Mac')
+            break
+        case 'RPM':
+            buildPackage('Rpm')
+            break
+        case 'DEB':
+            buildPackage('Deb')
+            break
+        case 'WINDOWS':
+        case 'JSMOOTH':
+            buildPackage('Windows')
+            break
     }
 }
 
-packageLauncher = { type ->
-	includeTargets.binding.with {
-        getVariable("prepare${type}Launcher")()
-        getVariable("create${type}Launcher")()
+buildPackage = { type ->
+    includeTargets.binding.with {
+        getVariable("prepare${type}")()
+        getVariable("create${type}")()
     }
 }

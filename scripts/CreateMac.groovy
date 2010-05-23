@@ -25,7 +25,7 @@
 
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_CreateLauncher")
+includeTargets << pluginScript("installer","_Create")
 
 ant.path(id : 'installerJarSet') {
     fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
@@ -35,16 +35,16 @@ ant.taskdef(name: "jarbundler",
             classpathref: "installerJarSet")
 
 target('default': "Creates a Mac launcher") {
-    createMacLauncher()
+    createMac()
 }
 
-target(macLauncherSanityCheck:"") {
+target(macSanityCheck:"") {
     depends(checkVersion, classpath)
 
-	installerWorkDir = "${projectTargetDir}/installer/mac/dist"
-	binaryDir = installerWorkDir
-	ant.mkdir(dir: installerWorkDir)
-	
+    installerWorkDir = "${projectTargetDir}/installer/mac/dist"
+    binaryDir = installerWorkDir
+    ant.mkdir(dir: installerWorkDir)
+    
     def src = new File("${installerWorkDir}/../")
     if (!src.list()) {
         println """No Mac launcher sources were found.
@@ -55,10 +55,10 @@ and configure the files appropriately.
     }
 }
 
-target(createMacLauncher: "Creates a Mac launcher") {
-    depends(macLauncherSanityCheck)
+target(createMac: "Creates a Mac launcher") {
+    depends(macSanityCheck)
 
-    event("CreateMacLauncherStart", [])
+    event("CreateMacStart", [])
 
     // clean up old launchers
     ant.delete(dir: installerWorkDir, quiet: true, failOnError: false)
@@ -81,12 +81,12 @@ target(createMacLauncher: "Creates a Mac launcher") {
         jarfileset(dir: "${installerWorkDir}/lib", includes: "*.jar")
     }
 
-    def distDir = 'dist/mac'
-    ant.delete(dir: distDir, quiet: true, failonerror: false)
-    ant.mkdir(dir: distDir)
-    ant.copy(todir: distDir) {
-	    fileset(dir: bundleDir)
-	}
+    def macDistDir = distDir + '/mac'
+    ant.delete(dir: macDistDir, quiet: true, failonerror: false)
+    ant.mkdir(dir: macDistDir)
+    ant.copy(todir: macDistDir) {
+        fileset(dir: bundleDir)
+    }
 
     // create a DMG if on a Mac
     ant.condition(property: "os.isOSX", value: true) {
@@ -99,10 +99,10 @@ target(createMacLauncher: "Creates a Mac launcher") {
         ant.exec(executable: "hdiutil") {
            arg(line:"create -srcfolder ${bundleDir} ${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg" )
         }
-	    ant.copy(todir: distDir, file: "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg")
+        ant.copy(todir: macDistDir, file: "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}.dmg")
     } else {
         ant.echo(message:"Skipping DMG file creation as it requires the build be run on Mac OS X")
     }
 
-    event("CreateMacLauncherEnd", [])
+    event("CreateMacEnd", [])
 }

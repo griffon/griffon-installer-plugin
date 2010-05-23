@@ -15,23 +15,31 @@
  */
 
 /**
- * Gant script that prepares a Windows launcher.  This script just defers to the JSmooth launcher scripts.
+ * Base script for installer scripts
  *
  * @author Andres Almiray
- * @author Josh Reed
  *
  * @since 0.4
  */
 
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << pluginScript("installer", "PrepareJsmoothLauncher")
+import static griffon.util.GriffonApplicationUtils.isMacOSX
+import griffon.util.RunMode
 
-target('default': "Prepares a Windows launcher") {
-    prepareWindowsLauncher()
+includeTargets << griffonScript("Package")
+includeTargets << pluginScript("installer","_Prepare")
+
+target(copyAllAppArtifacts: "") {
+   depends(checkVersion)
+   
+   targetDistDir = binaryDir
+   System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
+
+   create_binary_package()
+   copyAppResources()
 }
 
-target(prepareWindowsLauncher: "Prepares a Windows launcher") {
-    event("PrepareWindowsLauncherStart", [])
-    prepareJsmoothLauncher()
-    event("PrepareWindowsLauncherEnd", [])
+target(copyAppResources: "") {
+    ant.copy( todir: "${binaryDir}/icons" ) {
+        fileset( dir: "${basedir}/griffon-app/resources/", includes: "griffon-icon*" )
+    }
 }

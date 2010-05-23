@@ -15,7 +15,7 @@
  */
 
 /**
- * Gant script that prepares a Mac application bundle.
+ * Gant script that creates a Windows launcher.  This script just defers to the JSmooth launcher scripts.
  *
  * @author Andres Almiray
  * @author Josh Reed
@@ -24,21 +24,13 @@
  */
 
 includeTargets << griffonScript('_GriffonInit')
-installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript('installer','_PrepareLauncher')
+includeTargets << pluginScript('installer', 'CreateJsmooth')
 
-target('default': "Prepares a Mac launcher") {
-    prepareMacLauncher()
-}
+target(createWindows: 'Create a Windows launcher') {
+    event('CreateWindowsStart', [])
 
-target(prepareMacLauncher: "Prepares a Mac launcher") {
-    event("PrepareMacLauncherStart", [])
+    createJsmooth()
+    ant.move(file: 'dist/jsmooth', tofile: 'dist/windows')
 
-	installerWorkDir = "${projectTargetDir}/installer/mac"
-	binaryDir = installerWorkDir
-	
-    ant.mkdir(dir: installerWorkDir)
-    ant.copy(file:"${installerPluginBase}/src/templates/jarbundler/JavaApplicationStub", tofile: "${binaryDir}/${griffonAppName}")
-
-    event("PrepareMacLauncherEnd", [])
+    event('CreateWindowsEnd', [])
 }

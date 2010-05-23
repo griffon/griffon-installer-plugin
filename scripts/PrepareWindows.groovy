@@ -15,7 +15,7 @@
  */
 
 /**
- * Gant script that creates a Windows launcher.  This script just defers to the JSmooth launcher scripts.
+ * Gant script that prepares a Windows launcher.  This script just defers to the JSmooth launcher scripts.
  *
  * @author Andres Almiray
  * @author Josh Reed
@@ -23,14 +23,15 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript('_GriffonInit')
-includeTargets << pluginScript('installer', 'CreateJsmoothLauncher')
+includeTargets << griffonScript("_GriffonInit")
+includeTargets << pluginScript("installer", "PrepareJsmooth")
 
-target(createWindowsLauncher: 'Create a Windows launcher') {
-    event('CreateWindowsLauncherStart', [])
+target('default': "Prepares a Windows launcher") {
+    prepareWindows()
+}
 
-    createJsmoothLauncher()
-    ant.move(file: 'dist/jsmooth', tofile: 'dist/windows')
-
-    event('CreateWindowsLauncherEnd', [])
+target(prepareWindows: "Prepares a Windows launcher") {
+    event("PrepareWindowsStart", [])
+    prepareJsmooth()
+    event("PrepareWindowsEnd", [])
 }

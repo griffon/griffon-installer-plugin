@@ -20,9 +20,9 @@
 
     <!-- following appears in HelloPanel -->
     <authors>
-      <author name="Your Name" email="your.account@your.company.com"/>
+      <author name="@app.author@" email="@app.author.email@"/>
     </authors>
-    <url>http://your.website.com/@app.name@</url>
+    <url>@app.url@</url>
   </info>
 
   <guiprefs width="800" height="600" resizable="yes">

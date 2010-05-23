@@ -24,17 +24,17 @@
 
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_CreateLauncher")
+includeTargets << pluginScript("installer","_Create")
 
 target('default': "Creates an RPM installer") {
-    createRpmLauncher()
+    createRpm()
 }
 
 target(rpmSanityCheck:"") {
     depends(checkVersion, classpath)//, test_is_linux)
 
-	installerWorkDir = "${projectTargetDir}/installer/rpm"
-	binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
+    installerWorkDir = "${projectTargetDir}/installer/rpm"
+    binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
 
     def src = new File(installerWorkDir)
     if(!src.list() ) {
@@ -46,10 +46,19 @@ and configure the files appropriately.
     }
 }
 
-target(createRpmLauncher: "Creates an RPM installer") {
+target(createRpm: "Creates an RPM installer") {
     depends(rpmSanityCheck, copyAllAppArtifacts)
 
-    event("CreateRpmLauncherStart", [])
+    event("CreateRpmStart", [])
+
+    ant.replace(dir: "${installerWorkDir}/SPECS") {
+        replacefilter(token: "@app.name@", value: griffonAppName)
+        replacefilter(token: "@app.version@", value: griffonAppVersion)
+        replacefilter( token: "@app.license@", value: 'unknown' )
+        replacefilter( token: "@app.url@", value: 'unknown' )
+        replacefilter( token: "@app.description@", value: 'unknown' )
+        replacefilter( token: "@app.summary@", value: griffonAppName )
+    }
 
     ant.zip(destfile: "${installerWorkDir}/SOURCES/${griffonAppName}-${griffonAppVersion}-bin.zip",
             basedir: installerWorkDir,
@@ -60,5 +69,11 @@ target(createRpmLauncher: "Creates an RPM installer") {
             cleanBuildDir: "false",
             failOnError: "true" )
 
-    event("CreateRpmLauncherEnd", [])
+    def rpmDistDir = distDir + '/rpm'
+    ant.mkdir(dir: rpmDistDir)
+    ant.copy(todir: rpmDistDir) {
+       fileset(dir: "${installerWorkDir}/RPMS", includes: '**/*.rpm')
+    }
+
+    event("CreateRpmEnd", [])
 }

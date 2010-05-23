@@ -24,18 +24,18 @@
 
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_PrepareLauncher")
+includeTargets << pluginScript("installer","_Prepare")
 
 target('default': "Prepares an RPM installer") {
-    prepareRpmLauncher()
+    prepareRpm()
 }
 
-target(prepareRpmLauncher: "Prepares an RPM installer") {
+target(prepareRpm: "Prepares an RPM installer") {
 //    depends(test_is_linux)
-    event( "PrepareRpmLauncherStart", [] )
+    event("PrepareRpmStart", [])
 
-	installerWorkDir = "${projectTargetDir}/installer/rpm"
-	binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
+    installerWorkDir = "${projectTargetDir}/installer/rpm"
+    binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
 
     ant.mkdir(dir: "${installerWorkDir}/BUILD")
     ant.mkdir(dir: "${installerWorkDir}/SOURCES")
@@ -45,15 +45,11 @@ target(prepareRpmLauncher: "Prepares an RPM installer") {
 
     prepareDirectories()
 
-    ant.copy( todir: "${installerWorkDir}/SPECS" ) {
-        fileset( dir: "${installerPluginBase}/src/templates/rpm" )
+    ant.copy(todir: "${installerWorkDir}/SPECS") {
+        fileset(dir: "${installerPluginBase}/src/templates/rpm")
     }
-    ant.replace( dir: "${installerWorkDir}/SPECS" ) {
-        replacefilter( token: "@app.name@", value:"${griffonAppName}" )
-        replacefilter( token: "@app.version@", value:"${griffonAppVersion}" )
-    }
-    ant.move( file: "${installerWorkDir}/SPECS/app.spec",
-              tofile: "${installerWorkDir}/SPECS/${griffonAppName}.spec" )
+    ant.move(file: "${installerWorkDir}/SPECS/app.spec",
+              tofile: "${installerWorkDir}/SPECS/${griffonAppName}.spec")
 
-    event( "PrepareRpmLauncherEnd", [] )
+    event("PrepareRpmEnd", [])
 }

@@ -24,7 +24,7 @@
 
 includeTargets << griffonScript("_GriffonInit")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_CreateLauncher")
+includeTargets << pluginScript("installer","_Create")
 
 ant.path(id : "installerJarSet") {
     fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
@@ -35,14 +35,15 @@ ant.taskdef(name: "izpack",
             classpathref: "installerJarSet")
 
 target('default': "Creates an IzPack installer") {
-	createIzpackLauncher()
+    createIzpack()
 }
 
-target('izpackSanityCheck':'') {	
+target('izpackSanityCheck':'') {    
     depends(checkVersion, classpath)
 
     installerWorkDir = "${projectTargetDir}/installer/izpack"
     binaryDir = installerWorkDir + '/binary'
+    installerResourcesDir = installerWorkDir + '/resources'
 
     def src = new File(installerWorkDir)
     if(!src.list()) {
@@ -54,17 +55,25 @@ and configure the files appropriately.
     }
 }
 
-target(createIzpackLauncher: "Creates an IzPack installer") {
+target(createIzpack: "Creates an IzPack installer") {
     depends(izpackSanityCheck, copyAllAppArtifacts)
 
-    event("CreateIzpackLauncherStart", [])
+    event("CreateIzpackStart", [])
+
+    ant.replace(dir: installerResourcesDir, includes: '*.xml,*.html,*.txt,*properties') {
+        replacefilter(token: '@app.name@', value: griffonAppName)
+        replacefilter(token: '@app.version@', value: griffonAppVersion)
+        replacefilter(token: '@app.author@', value: 'Griffon')
+        replacefilter(token: '@app.author.email@', value: 'user@griffon.codehaus.org')
+        replacefilter(token: '@app.url@', value: 'http://griffon.codehaus.org')
+    }
 
     ant.mkdir(dir: "dist/izpack")
     ant.izpack(basedir: installerWorkDir,
                input: "${installerWorkDir}/resources/installer.xml",
-               output: "dist/izpack/${griffonAppName}-${griffonAppVersion}-installer.jar",
+               output: "${distDir}/izpack/${griffonAppName}-${griffonAppVersion}-installer.jar",
                compression: "deflate",
                compressionLevel: "9")
-		    
-    event("CreateIzpackLauncherEnd", [])
+            
+    event("CreateIzpackEnd", [])
 }
