@@ -58,7 +58,7 @@ and configure the files appropriately.
 target(createMac: "Creates a Mac launcher") {
     depends(macSanityCheck)
 
-    event("CreateMacStart", [])
+    event("CreatePackageStart", ['mac'])
 
     // clean up old launchers
     ant.delete(dir: installerWorkDir, quiet: true, failOnError: false)
@@ -104,5 +104,5 @@ target(createMac: "Creates a Mac launcher") {
         ant.echo(message:"Skipping DMG file creation as it requires the build be run on Mac OS X")
     }
 
-    event("CreateMacEnd", [])
+    event("CreatePackageEnd", ['mac'])
 }

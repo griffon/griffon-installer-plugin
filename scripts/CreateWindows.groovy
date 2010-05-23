@@ -26,11 +26,11 @@
 includeTargets << griffonScript('_GriffonInit')
 includeTargets << pluginScript('installer', 'CreateJsmooth')
 
-target(createWindows: 'Create a Windows launcher') {
-    event('CreateWindowsStart', [])
+target(createPackage: 'Create a Windows launcher') {
+    event('CreatePackageStart', ['windows'])
 
     createJsmooth()
     ant.move(file: 'dist/jsmooth', tofile: 'dist/windows')
 
-    event('CreateWindowsEnd', [])
+    event('CreatePackageEnd', ['windows'])
 }

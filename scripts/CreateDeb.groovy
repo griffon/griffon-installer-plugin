@@ -57,7 +57,7 @@ and configure the files appropriately.
 target(createDeb: "Creates a .deb package") {
     depends(debSanityCheck, copyAllAppArtifacts)
 
-    event("CreateDebStart", [])
+    event("CreatePackageStart", ['deb'])
 
     ant.replace(dir: installerResourcesdir, includes: '*.properties') {
         replacefilter(token: '@app.name@', value: griffonAppName)
@@ -103,5 +103,5 @@ Please update the name of your application with the aforementioned guidelines by
        fileset(dir: installerWorkDir, includes: '*.deb')
     }
             
-    event("CreateDebEnd", [])
+    event("CreatePackageEnd", ['deb'])
 }

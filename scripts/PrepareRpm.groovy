@@ -32,7 +32,7 @@ target('default': "Prepares an RPM installer") {
 
 target(prepareRpm: "Prepares an RPM installer") {
 //    depends(test_is_linux)
-    event("PrepareRpmStart", [])
+    event("PreparePackageStart", ['rpm'])
 
     installerWorkDir = "${projectTargetDir}/installer/rpm"
     binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
@@ -51,5 +51,5 @@ target(prepareRpm: "Prepares an RPM installer") {
     ant.move(file: "${installerWorkDir}/SPECS/app.spec",
               tofile: "${installerWorkDir}/SPECS/${griffonAppName}.spec")
 
-    event("PrepareRpmEnd", [])
+    event("PreparePackageEnd", ['rpm'])
 }

@@ -31,7 +31,7 @@ target('default': "Prepares a Windows launcher") {
 }
 
 target(prepareWindows: "Prepares a Windows launcher") {
-    event("PrepareWindowsStart", [])
+    event("PreparePackageStart", ['windows'])
     prepareJsmooth()
-    event("PrepareWindowsEnd", [])
+    event("PreparePackageEnd", ['windows'])
 }

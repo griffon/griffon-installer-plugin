@@ -31,7 +31,7 @@ target('default': 'Prepares an IzPack installer') {
 }
     
 target('prepareIzpack': 'Prepares an IzPack installer') {
-    event('PrepareIzpackStart', [])
+    event('PreparePackageStart', ['izpack'])
 
     installerWorkDir = "${projectTargetDir}/installer/izpack"
     binaryDir = installerWorkDir + '/binary'
@@ -42,5 +42,5 @@ target('prepareIzpack': 'Prepares an IzPack installer') {
     }
 
     prepareDirectories()
-    event('PrepareIzpackEnd', [])
+    event('PreparePackageEnd', ['izpack'])
 }

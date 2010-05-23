@@ -49,7 +49,7 @@ and configure the files appropriately.
 target(createRpm: "Creates an RPM installer") {
     depends(rpmSanityCheck, copyAllAppArtifacts)
 
-    event("CreateRpmStart", [])
+    event("CreatePackageStart", ['rpm'])
 
     ant.replace(dir: "${installerWorkDir}/SPECS") {
         replacefilter(token: "@app.name@", value: griffonAppName)
@@ -75,5 +75,5 @@ target(createRpm: "Creates an RPM installer") {
        fileset(dir: "${installerWorkDir}/RPMS", includes: '**/*.rpm')
     }
 
-    event("CreateRpmEnd", [])
+    event("CreatePackageEnd", ['rpm'])
 }

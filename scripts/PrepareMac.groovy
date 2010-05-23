@@ -32,7 +32,7 @@ target('default': "Prepares a Mac launcher") {
 }
 
 target(prepareMac: "Prepares a Mac launcher") {
-    event("PrepareMacStart", [])
+    event("PreparePackageStart", ['mac'])
 
     installerWorkDir = "${projectTargetDir}/installer/mac"
     binaryDir = installerWorkDir
@@ -40,5 +40,5 @@ target(prepareMac: "Prepares a Mac launcher") {
     ant.mkdir(dir: installerWorkDir)
     ant.copy(file:"${installerPluginBase}/src/templates/jarbundler/JavaApplicationStub", tofile: "${binaryDir}/${griffonAppName}")
 
-    event("PrepareMacEnd", [])
+    event("PreparePackageEnd", ['mac'])
 }

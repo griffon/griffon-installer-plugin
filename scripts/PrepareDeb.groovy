@@ -31,7 +31,7 @@ target('default': 'Prepares a .deb package') {
 }
     
 target('prepareDeb': 'Prepares a .deb package') {
-    event('PrepareDebStart', [])
+    event('PreparePackageStart', ['deb'])
 
     installerWorkDir = "${projectTargetDir}/installer/deb"
     binaryDir = installerWorkDir + '/binary'
@@ -42,5 +42,5 @@ target('prepareDeb': 'Prepares a .deb package') {
     }
 
     prepareDirectories()
-    event('PrepareDebEnd', [])
+    event('PreparePackageEnd', ['deb'])
 }

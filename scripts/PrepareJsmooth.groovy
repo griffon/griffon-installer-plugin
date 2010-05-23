@@ -31,7 +31,7 @@ target('default': "Prepares a JSmooth-based launcher") {
 }
 
 target(prepareJsmooth: "Prepares a JSmooth-based launcher") {
-    event("PrepareJsmoothStart", [])
+    event("PreparePackageStart", ['jsmooth'])
 
     installerWorkDir = "${projectTargetDir}/installer/jsmooth"
     binaryDir = installerWorkDir
@@ -44,5 +44,5 @@ target(prepareJsmooth: "Prepares a JSmooth-based launcher") {
     ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/msvcr71.dll",
              tofile: "${installerWorkDir}/msvcr71.dll")
 
-    event("PrepareJsmoothEnd", [])
+    event("PreparePackageEnd", ['jsmooth'])
 }

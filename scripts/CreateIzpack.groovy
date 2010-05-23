@@ -58,7 +58,7 @@ and configure the files appropriately.
 target(createIzpack: "Creates an IzPack installer") {
     depends(izpackSanityCheck, copyAllAppArtifacts)
 
-    event("CreateIzpackStart", [])
+    event("CreatePackageStart", ['izpack'])
 
     ant.replace(dir: installerResourcesDir, includes: '*.xml,*.html,*.txt,*properties') {
         replacefilter(token: '@app.name@', value: griffonAppName)
@@ -68,12 +68,12 @@ target(createIzpack: "Creates an IzPack installer") {
         replacefilter(token: '@app.url@', value: 'http://griffon.codehaus.org')
     }
 
-    ant.mkdir(dir: "dist/izpack")
+    ant.mkdir(dir: distDir + "/izpack")
     ant.izpack(basedir: installerWorkDir,
                input: "${installerWorkDir}/resources/installer.xml",
                output: "${distDir}/izpack/${griffonAppName}-${griffonAppVersion}-installer.jar",
                compression: "deflate",
                compressionLevel: "9")
             
-    event("CreateIzpackEnd", [])
+    event("CreatePackageEnd", ['izpack'])
 }

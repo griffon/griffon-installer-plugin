@@ -59,7 +59,7 @@ and configure the files appropriately.
 target(createJsmooth: "Creates a Jsmooth launcher") {
     depends(jsmoothSanityCheck)
 
-    event("CreateJsmoothStart", [])
+    event("CreatePackageStart", ['jsmooth'])
 
     // clean up old launchers
     ant.delete(dir: installerWorkDir, quiet: true, failOnError: false)
@@ -106,5 +106,5 @@ target(createJsmooth: "Creates a Jsmooth launcher") {
     ant.zip(basedir: jsmoothDistDir,
             destfile: "${jsmoothDistDir}/${griffonAppName}-windows-${griffonAppVersion}.zip")
 
-    event("CreateJsmoothEnd", [])
+    event("CreatePackageEnd", ['jsmooth'])
 }
