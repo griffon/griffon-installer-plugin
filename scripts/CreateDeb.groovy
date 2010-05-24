@@ -71,9 +71,9 @@ target(createDeb: "Creates a .deb package") {
     }
     ant.property(file: "${installerResourcesdir}/deb_settings.properties")
 
-    def packageName = ant.antProject.properties."deb.package.name"
+    def packageName = ant.antProject.properties."deb.package.name".toLowerCase()
     if(packageName.size() < 2 || !(packageName ==~ /^[a-z0-9][a-z0-9\.\-\+]*$/)) {
-        println """Illegal package name!
+        println """Illegal package name: $packageName
 According to http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Source
 'Package names (both source and binary, see Package, Section 5.6.7) must consist only of lower case letters (a-z), digits (0-9), plus (+) and minus (-) signs, and periods (.). They must be at least two characters long and must start with an alphanumeric character.'
 
