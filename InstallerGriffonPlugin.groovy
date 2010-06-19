@@ -20,8 +20,9 @@
  */
 class InstallerGriffonPlugin {
     def version = '0.5'
-    def canBeGlobal = true
     def dependsOn = [:]
+    def griffonVersion = '0.9 > *'
+    def license = 'Apache Software License 2.0'
 
     def author = "Andres Almiray, Josh Reed"
     def authorEmail = "aalmiray@users.sourceforge.net, jareed@andrill.org"
