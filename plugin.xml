@@ -1,7 +1,17 @@
-<plugin name='installer' version='0.5' griffonVersion='0.3.2 &gt; *' jdk='1.5'>
+<plugin name='installer' version='0.5' griffonVersion='0.9 &gt; *' jdk='1.5'>
   <author>Andres Almiray, Josh Reed</author>
   <authorEmail>aalmiray@users.sourceforge.net, jareed@andrill.org</authorEmail>
   <title>Creates launchers and installers for your Griffon application</title>
+  <description>Creates launchers and installers for your Griffon application.
+Supported formats are:
+ - IzPack (universal)
+ - RPM (Linux)
+ - AppBundle (MacOSX)
+ - JSmooth (Windows)</description>
   <documentation>http://griffon.codehaus.org/Installer+Plugin</documentation>
+  <license>Apache Software License 2.0</license>
+  <resources>
+    <resource>BuildConfig</resource>
+  </resources>
   <dependencies />
 </plugin>
