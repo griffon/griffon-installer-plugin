@@ -22,15 +22,11 @@
  * @since 0.5
  */
 
-includeTargets << griffonScript('_GriffonInit')
+includeTargets << griffonScript('Init')
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript('installer','_Prepare')
+includePluginScript('installer','_Prepare')
 
-target('default': 'Prepares a .deb package') {
-    prepareDeb()
-}
-    
-target('prepareDeb': 'Prepares a .deb package') {
+target('preparePackageDeb': 'Prepares a .deb package') {
     event('PreparePackageStart', ['deb'])
 
     installerWorkDir = "${projectTargetDir}/installer/deb"
@@ -44,3 +40,4 @@ target('prepareDeb': 'Prepares a .deb package') {
     prepareDirectories()
     event('PreparePackageEnd', ['deb'])
 }
+setDefaultTarget(preparePackageDeb)

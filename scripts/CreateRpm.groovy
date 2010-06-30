@@ -22,13 +22,9 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_Create")
-
-target('default': "Creates an RPM installer") {
-    createRpm()
-}
+includePluginScript("installer","_Create")
 
 target(rpmSanityCheck:"") {
     depends(checkVersion, classpath)//, test_is_linux)
@@ -47,7 +43,7 @@ and configure the files appropriately.
     }
 }
 
-target(createRpm: "Creates an RPM installer") {
+target(createPackageRpm: "Creates an RPM installer") {
     depends(rpmSanityCheck, copyAllAppArtifacts)
 
     event("CreatePackageStart", ['rpm'])
@@ -78,3 +74,4 @@ target(createRpm: "Creates an RPM installer") {
 
     event("CreatePackageEnd", ['rpm'])
 }
+setDefaultTarget(createPackageRpm)

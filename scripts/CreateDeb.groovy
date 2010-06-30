@@ -22,9 +22,9 @@
  * @since 0.5
  */
 
-includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_Create")
+includePluginScript("installer","_Create")
 
 ant.path(id : "installerJarSet") {
     fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
@@ -32,10 +32,6 @@ ant.path(id : "installerJarSet") {
 
 ant.taskdef(resource: "ant_deb_task.properties",
             classpathref: "installerJarSet")
-
-target('default': "Creates a .deb package") {
-    createDeb()
-}
 
 target('debSanityCheck':'') {    
     depends(checkVersion, classpath)
@@ -55,7 +51,7 @@ and configure the files appropriately.
     }
 }
 
-target(createDeb: "Creates a .deb package") {
+target(createPackageDeb: "Creates a .deb package") {
     depends(debSanityCheck, copyAllAppArtifacts)
 
     event("CreatePackageStart", ['deb'])
@@ -107,3 +103,4 @@ Please update the name of your application with the aforementioned guidelines by
             
     event("CreatePackageEnd", ['deb'])
 }
+setDefaultTarget(createPackageDeb)

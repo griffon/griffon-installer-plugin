@@ -23,15 +23,11 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript('_GriffonInit')
+includeTargets << griffonScript('Init')
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript('installer','_Prepare')
+includePluginScript('installer','_Prepare')
 
-target('default': "Prepares a Mac launcher") {
-    prepareMac()
-}
-
-target(prepareMac: "Prepares a Mac launcher") {
+target(preparePackageMac: "Prepares a Mac launcher") {
     event("PreparePackageStart", ['mac'])
 
     installerWorkDir = "${projectTargetDir}/installer/mac"
@@ -42,3 +38,4 @@ target(prepareMac: "Prepares a Mac launcher") {
 
     event("PreparePackageEnd", ['mac'])
 }
+setDefaultTarget(preparePackageMac)

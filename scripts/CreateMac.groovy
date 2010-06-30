@@ -23,9 +23,9 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_Create")
+includePluginScript("installer","_Create")
 
 ant.path(id : 'installerJarSet') {
     fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
@@ -33,10 +33,6 @@ ant.path(id : 'installerJarSet') {
 ant.taskdef(name: "jarbundler",
             classname: "net.sourceforge.jarbundler.JarBundler",
             classpathref: "installerJarSet")
-
-target('default': "Creates a Mac launcher") {
-    createMac()
-}
 
 target(macSanityCheck:"") {
     depends(checkVersion, classpath)
@@ -56,7 +52,7 @@ and configure the files appropriately.
     }
 }
 
-target(createMac: "Creates a Mac launcher") {
+target(createPackageMac: "Creates a Mac launcher") {
     depends(macSanityCheck)
 
     event("CreatePackageStart", ['mac'])
@@ -107,3 +103,4 @@ target(createMac: "Creates a Mac launcher") {
 
     event("CreatePackageEnd", ['mac'])
 }
+setDefaultTarget(createPackageMac)

@@ -20,11 +20,6 @@
  */
 
 if(!isPluginProject) {    
-    includeTargets << griffonScript('_PluginDependencies')
-    ['Izpack', 'Rpm', 'Deb', 'Mac', 'Windows'] .each { type ->
-        includePluginScript('installer', 'Prepare'+ type)
-        includePluginScript('installer', 'Create'+ type)
-    }
 }
 
 eventCleanEnd = {
@@ -55,8 +50,12 @@ eventMakePackage = { type ->
 }
 
 buildPackage = { type ->
+    includeTargets << griffonScript('Init')
+    includePluginScript('installer', 'Prepare'+ type)
+    includePluginScript('installer', 'Create'+ type)
+
     includeTargets.binding.with {
-        getVariable("prepare${type}")()
-        getVariable("create${type}")()
+        getVariable("preparePackage${type}")()
+        getVariable("createPackage${type}")()
     }
 }

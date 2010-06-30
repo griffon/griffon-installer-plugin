@@ -26,7 +26,7 @@ import static griffon.util.GriffonApplicationUtils.isMacOSX
 import griffon.util.RunMode
 
 includeTargets << griffonScript("Package")
-includeTargets << pluginScript("installer","_Prepare")
+includePluginScript("installer","_Prepare")
 
 target(copyAllAppArtifacts: "") {
    depends(checkVersion, createConfig)

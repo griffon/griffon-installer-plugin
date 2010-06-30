@@ -22,15 +22,11 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript('_GriffonInit')
+includeTargets << griffonScript('Init')
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript('installer','_Prepare')
+includePluginScript('installer','_Prepare')
 
-target('default': 'Prepares an IzPack installer') {
-    prepareIzpack()
-}
-    
-target('prepareIzpack': 'Prepares an IzPack installer') {
+target('preparePackageIzpack': 'Prepares an IzPack installer') {
     event('PreparePackageStart', ['izpack'])
 
     installerWorkDir = "${projectTargetDir}/installer/izpack"
@@ -44,3 +40,4 @@ target('prepareIzpack': 'Prepares an IzPack installer') {
     prepareDirectories()
     event('PreparePackageEnd', ['izpack'])
 }
+setDefaultTarget(preparePackageIzpack)

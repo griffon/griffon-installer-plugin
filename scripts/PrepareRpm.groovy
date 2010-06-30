@@ -22,15 +22,11 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_Prepare")
+includePluginScript("installer","_Prepare")
 
-target('default': "Prepares an RPM installer") {
-    prepareRpm()
-}
-
-target(prepareRpm: "Prepares an RPM installer") {
+target(preparePackageRpm: "Prepares an RPM installer") {
 //    depends(test_is_linux)
     event("PreparePackageStart", ['rpm'])
 
@@ -53,3 +49,4 @@ target(prepareRpm: "Prepares an RPM installer") {
 
     event("PreparePackageEnd", ['rpm'])
 }
+setDefaultTarget(preparePackageRpm)

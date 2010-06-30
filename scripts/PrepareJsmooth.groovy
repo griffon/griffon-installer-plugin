@@ -22,15 +22,11 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
-includeTargets << pluginScript("installer","_Prepare")
+includePluginScript("installer","_Prepare")
 
-target('default': "Prepares a JSmooth-based launcher") {
-    prepareJsmooth()
-}
-
-target(prepareJsmooth: "Prepares a JSmooth-based launcher") {
+target(preparePackageJsmooth: "Prepares a JSmooth-based launcher") {
     event("PreparePackageStart", ['jsmooth'])
 
     installerWorkDir = "${projectTargetDir}/installer/jsmooth"
@@ -46,3 +42,4 @@ target(prepareJsmooth: "Prepares a JSmooth-based launcher") {
 
     event("PreparePackageEnd", ['jsmooth'])
 }
+setDefaultTarget(preparePackageJsmooth)

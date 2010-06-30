@@ -23,15 +23,12 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << pluginScript("installer", "PrepareJsmooth")
+includeTargets << griffonScript("Init")
+includePluginScript("installer", "PrepareJsmooth")
 
-target('default': "Prepares a Windows launcher") {
-    prepareWindows()
-}
-
-target(prepareWindows: "Prepares a Windows launcher") {
+target(preparePackageWindows: "Prepares a Windows launcher") {
     event("PreparePackageStart", ['windows'])
-    prepareJsmooth()
+    preparePackageJsmooth()
     event("PreparePackageEnd", ['windows'])
 }
+setDefaultTarget(preparePackageWindows)
