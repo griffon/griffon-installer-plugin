@@ -31,7 +31,7 @@ includePluginScript("installer","_Prepare")
 target(copyAllAppArtifacts: "") {
    depends(checkVersion, createConfig)
 
-   distDir = config.griffon.dist.dir ?: "${basedir}/dist"
+   distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
    targetDistDir = binaryDir
    System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
 
