@@ -30,7 +30,7 @@ target(rpmSanityCheck:"") {
     depends(checkVersion, classpath)//, test_is_linux)
 
     packageType = 'rpm'
-    installerWorkDir = "${projectTargetDir}/installer/rpm"
+    installerWorkDir = "${projectWorkDir}/installer/rpm"
     binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
 
     def src = new File(installerWorkDir)

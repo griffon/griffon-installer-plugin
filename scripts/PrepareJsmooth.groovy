@@ -29,7 +29,7 @@ includePluginScript("installer","_Prepare")
 target(preparePackageJsmooth: "Prepares a JSmooth-based launcher") {
     event("PreparePackageStart", ['jsmooth'])
 
-    installerWorkDir = "${projectTargetDir}/installer/jsmooth"
+    installerWorkDir = "${projectWorkDir}/installer/jsmooth"
     binaryDir = installerWorkDir
     installerPluginBase = getPluginDirForName('installer').file as String
     

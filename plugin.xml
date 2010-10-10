@@ -1,4 +1,4 @@
-<plugin name='installer' version='0.5' griffonVersion='0.9 &gt; *' jdk='1.5'>
+<plugin name='installer' version='0.5.1' griffonVersion='0.9 &gt; *' jdk='1.5'>
   <author>Andres Almiray, Josh Reed</author>
   <authorEmail>aalmiray@users.sourceforge.net, jareed@andrill.org</authorEmail>
   <title>Creates launchers and installers for your Griffon application</title>

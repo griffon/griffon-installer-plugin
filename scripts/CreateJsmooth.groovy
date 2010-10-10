@@ -37,7 +37,7 @@ target(jsmoothSanityCheck:"") {
     depends(checkVersion, classpath)
 
     packageType = 'jsmooth'
-    installerDir = "${projectTargetDir}/installer/jsmooth"
+    installerDir = "${projectWorkDir}/installer/jsmooth"
     installerWorkDir = "${installerDir}/dist"
     skeletonsDir = installerPluginBase + "/src/templates/jsmooth/skeletons"
     binaryDir = installerWorkDir

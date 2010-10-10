@@ -37,7 +37,7 @@ target('debSanityCheck':'') {
     depends(checkVersion, classpath)
 
     packageType = 'deb'
-    installerWorkDir = "${projectTargetDir}/installer/deb"
+    installerWorkDir = "${projectWorkDir}/installer/deb"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesdir = installerWorkDir + '/resources'
 

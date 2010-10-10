@@ -19,11 +19,8 @@
  * @author Andres Almiray
  */
 
-if(!isPluginProject) {    
-}
-
-eventCleanEnd = {
-    ant.delete(dir: "${projectTargetDir}/installer/")
+eventCleanPackage = { type ->
+    ant.delete(dir: "${projectWorkDir}/installer/${type}", failonerror: false)
 }
 
 eventMakePackage = { type ->

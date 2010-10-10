@@ -38,7 +38,7 @@ target(macSanityCheck:"") {
     depends(checkVersion, classpath)
 
     packageType = 'mac'
-    installerWorkDir = "${projectTargetDir}/installer/mac/dist"
+    installerWorkDir = "${projectWorkDir}/installer/mac/dist"
     binaryDir = installerWorkDir
     ant.mkdir(dir: installerWorkDir)
     

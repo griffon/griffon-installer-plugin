@@ -29,7 +29,7 @@ includePluginScript('installer','_Prepare')
 target('preparePackageIzpack': 'Prepares an IzPack installer') {
     event('PreparePackageStart', ['izpack'])
 
-    installerWorkDir = "${projectTargetDir}/installer/izpack"
+    installerWorkDir = "${projectWorkDir}/installer/izpack"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'
 

@@ -30,7 +30,7 @@ target(preparePackageRpm: "Prepares an RPM installer") {
 //    depends(test_is_linux)
     event("PreparePackageStart", ['rpm'])
 
-    installerWorkDir = "${projectTargetDir}/installer/rpm"
+    installerWorkDir = "${projectWorkDir}/installer/rpm"
     binaryDir = "${installerWorkDir}/${griffonAppName}-${griffonAppVersion}"
 
     ant.mkdir(dir: "${installerWorkDir}/BUILD")

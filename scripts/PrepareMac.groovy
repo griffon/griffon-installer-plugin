@@ -30,7 +30,7 @@ includePluginScript('installer','_Prepare')
 target(preparePackageMac: "Prepares a Mac launcher") {
     event("PreparePackageStart", ['mac'])
 
-    installerWorkDir = "${projectTargetDir}/installer/mac"
+    installerWorkDir = "${projectWorkDir}/installer/mac"
     binaryDir = installerWorkDir
     
     ant.mkdir(dir: installerWorkDir)

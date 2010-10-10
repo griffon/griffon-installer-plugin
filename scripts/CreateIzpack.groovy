@@ -38,7 +38,7 @@ target('izpackSanityCheck':'') {
     depends(checkVersion, classpath)
 
     packageType = 'izpack'
-    installerWorkDir = "${projectTargetDir}/installer/izpack"
+    installerWorkDir = "${projectWorkDir}/installer/izpack"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'
 

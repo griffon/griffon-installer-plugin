@@ -29,7 +29,7 @@ includePluginScript('installer','_Prepare')
 target('preparePackageDeb': 'Prepares a .deb package') {
     event('PreparePackageStart', ['deb'])
 
-    installerWorkDir = "${projectTargetDir}/installer/deb"
+    installerWorkDir = "${projectWorkDir}/installer/deb"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'
 
