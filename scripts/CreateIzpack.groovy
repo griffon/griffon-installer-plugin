@@ -22,20 +22,14 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript("installer","_Create")
 
-ant.path(id : "installerJarSet") {
-    fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
-}
+target(name: 'izpackSanityCheck', description: '', prehook: null, posthook: null) {    
+    depends(classpath)
 
-ant.taskdef(name: "izpack",
-            classname: "com.izforge.izpack.ant.IzPackTask",
-            classpathref: "installerJarSet")
-
-target('izpackSanityCheck':'') {    
-    depends(checkVersion, classpath)
+    ant.taskdef(name: "izpack",
+                classname: "com.izforge.izpack.ant.IzPackTask")
 
     packageType = 'izpack'
     installerWorkDir = "${projectWorkDir}/installer/izpack"
@@ -52,7 +46,7 @@ and configure the files appropriately.
     }
 }
 
-target(createPackageIzpack: "Creates an IzPack installer") {
+target(name: 'createPackageIzpack', description: '', prehook: null, posthook: null) {
     depends(izpackSanityCheck, copyAllAppArtifacts)
 
     event("CreatePackageStart", ['izpack'])

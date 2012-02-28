@@ -22,11 +22,10 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript("installer","_Prepare")
 
-target(preparePackageRpm: "Prepares an RPM installer") {
+target(name: 'preparePackageRpm', description: '', prehook: null, posthook: null) {
 //    depends(test_is_linux)
     event("PreparePackageStart", ['rpm'])
 

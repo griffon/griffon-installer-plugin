@@ -22,19 +22,14 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript("installer","_Create")
 
-ant.path(id : 'installerJarSet') {
-    fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
-}
-ant.taskdef(name: "jsmoothgen",
-            classname: "net.charabia.jsmoothgen.ant.JSmoothGen",
-            classpathref: "installerJarSet")
+target(name: 'jsmoothSanityCheck', description: '', prehook: null, posthook: null) {
+    depends(classpath)
 
-target(jsmoothSanityCheck:"") {
-    depends(checkVersion, classpath)
+    ant.taskdef(name: "jsmoothgen",
+                classname: "net.charabia.jsmoothgen.ant.JSmoothGen")
 
     packageType = 'jsmooth'
     installerDir = "${projectWorkDir}/installer/jsmooth"
@@ -53,7 +48,7 @@ and configure the files appropriately.
     }
 }
 
-target(createPackageJsmooth: "Creates a Jsmooth launcher") {
+target(name: 'createPackageJsmooth', description: '', prehook: null, posthook: null) {
     depends(jsmoothSanityCheck)
 
     event("CreatePackageStart", ['jsmooth'])

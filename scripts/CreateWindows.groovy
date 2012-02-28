@@ -23,10 +23,9 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript('Init')
 includePluginScript('installer', 'CreateJsmooth')
 
-target(createPackageWindows: 'Create a Windows launcher') {
+target(name: 'createPackageWindows', description: '', prehook: null, posthook: null) {
     event('CreatePackageStart', ['windows'])
 
     createPackageJsmooth()

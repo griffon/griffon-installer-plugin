@@ -23,11 +23,10 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript('Init')
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript('installer','_Prepare')
 
-target(preparePackageMac: "Prepares a Mac launcher") {
+target(name: 'preparePackageMac', description: '', prehook: null, posthook: null) {
     event("PreparePackageStart", ['mac'])
 
     installerWorkDir = "${projectWorkDir}/installer/mac"

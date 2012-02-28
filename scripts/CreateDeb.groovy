@@ -22,19 +22,13 @@
  * @since 0.5
  */
 
-includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript("installer","_Create")
 
-ant.path(id : "installerJarSet") {
-    fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
-}
+target(name: 'debSanityCheck', description: '', prehook: null, posthook: null) {    
+    depends(classpath)
 
-ant.taskdef(resource: "ant_deb_task.properties",
-            classpathref: "installerJarSet")
-
-target('debSanityCheck':'') {    
-    depends(checkVersion, classpath)
+    ant.taskdef(resource: "ant_deb_task.properties")
 
     packageType = 'deb'
     installerWorkDir = "${projectWorkDir}/installer/deb"
@@ -51,7 +45,7 @@ and configure the files appropriately.
     }
 }
 
-target(createPackageDeb: "Creates a .deb package") {
+target(name: 'createPackageDeb', description: '', prehook: null, posthook: null) {
     depends(debSanityCheck, copyAllAppArtifacts)
 
     event("CreatePackageStart", ['deb'])

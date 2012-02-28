@@ -28,7 +28,7 @@ import griffon.util.RunMode
 includeTargets << griffonScript("Package")
 includePluginScript("installer","_Prepare")
 
-target(copyAllAppArtifacts: "") {
+target(name: 'copyAllAppArtifacts', description: '', prehook: null, posthook: null) {
    depends(checkVersion, createConfig)
 
    distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
@@ -39,7 +39,7 @@ target(copyAllAppArtifacts: "") {
    copyAppResources()
 }
 
-target(copyAppResources: "") {
+target(name: 'copyAppResources', description: '', prehook: null, posthook: null) {
     ant.copy( todir: "${binaryDir}/icons" ) {
         fileset( dir: "${basedir}/griffon-app/resources/", includes: "griffon-icon*" )
     }

@@ -23,10 +23,9 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript("Init")
 includePluginScript("installer", "PrepareJsmooth")
 
-target(preparePackageWindows: "Prepares a Windows launcher") {
+target(name: 'preparePackageWindows', description: '', prehook: null, posthook: null) {
     event("PreparePackageStart", ['windows'])
     preparePackageJsmooth()
     event("PreparePackageEnd", ['windows'])

@@ -22,11 +22,10 @@
  * @since 0.5
  */
 
-includeTargets << griffonScript('Init')
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript('installer','_Prepare')
 
-target('preparePackageDeb': 'Prepares a .deb package') {
+target(name: 'preparePackageDeb', description: '', prehook: null, posthook: null) {
     event('PreparePackageStart', ['deb'])
 
     installerWorkDir = "${projectWorkDir}/installer/deb"

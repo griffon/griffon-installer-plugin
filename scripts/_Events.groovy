@@ -47,7 +47,6 @@ eventMakePackage = { type ->
 }
 
 buildPackage = { type ->
-    includeTargets << griffonScript('Init')
     includePluginScript('installer', 'Prepare'+ type)
     includePluginScript('installer', 'Create'+ type)
 

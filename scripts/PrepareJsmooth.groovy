@@ -22,11 +22,10 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript("installer","_Prepare")
 
-target(preparePackageJsmooth: "Prepares a JSmooth-based launcher") {
+target(name: 'preparePackageJsmooth', description: '', prehook: null, posthook: null) {
     event("PreparePackageStart", ['jsmooth'])
 
     installerWorkDir = "${projectWorkDir}/installer/jsmooth"

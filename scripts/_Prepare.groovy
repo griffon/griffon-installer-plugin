@@ -27,7 +27,7 @@ installerPluginBase = getPluginDirForName('installer').file as String
 // installerWorkDir = "${basedir}/installer/izpack"
 // binaryDir = installerWorkDir + "/binary"
 
-target(prepareDirectories: "") {
+target(name: 'prepareDirectories', description: '', prehook: null, posthook: null) {
     depends(checkVersion)
 
     ant.mkdir(dir: installerWorkDir)
@@ -35,7 +35,7 @@ target(prepareDirectories: "") {
     ant.mkdir(dir: "${binaryDir}/icons")
 }
 
-target(test_is_linux: "") {
+target(name: 'test_is_linux', description: '', prehook: null, posthook: null) {
     ant.condition(property: "os.isLinux", value: true) {
         and {
             os( family: "unix" )
@@ -46,7 +46,7 @@ target(test_is_linux: "") {
     ant.fail(message: "You are not running on Linux", unless: "os.isLinux")
 }
 
-target(test_is_osx: "") {
+target(name: 'test_is_osx', description: '', prehook: null, posthook: null) {
     ant.condition(property: "os.isOSX", value: true) {
         and {
             os( family: "mac" )

@@ -22,11 +22,10 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript('Init')
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript('installer','_Prepare')
 
-target('preparePackageIzpack': 'Prepares an IzPack installer') {
+target(name: 'preparePackageIzpack', description: '', prehook: null, posthook: null) {
     event('PreparePackageStart', ['izpack'])
 
     installerWorkDir = "${projectWorkDir}/installer/izpack"

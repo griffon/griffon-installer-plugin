@@ -22,12 +22,11 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript("installer","_Create")
 
-target(rpmSanityCheck:"") {
-    depends(checkVersion, classpath)//, test_is_linux)
+target(name: 'rpmSanityCheck', description: '', prehook: null, posthook: null) {
+    depends(classpath)//, test_is_linux)
 
     packageType = 'rpm'
     installerWorkDir = "${projectWorkDir}/installer/rpm"
@@ -43,7 +42,7 @@ and configure the files appropriately.
     }
 }
 
-target(createPackageRpm: "Creates an RPM installer") {
+target(name: 'createPackageRpm', description: '', prehook: null, posthook: null) {
     depends(rpmSanityCheck, copyAllAppArtifacts)
 
     event("CreatePackageStart", ['rpm'])

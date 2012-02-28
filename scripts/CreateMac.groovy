@@ -23,19 +23,14 @@
  * @since 0.4
  */
 
-includeTargets << griffonScript("Init")
 installerPluginBase = getPluginDirForName('installer').file as String
 includePluginScript("installer","_Create")
 
-ant.path(id : 'installerJarSet') {
-    fileset(dir: "${installerPluginBase}/lib/installer", includes : "*.jar")
-}
-ant.taskdef(name: "jarbundler",
-            classname: "net.sourceforge.jarbundler.JarBundler",
-            classpathref: "installerJarSet")
-
-target(macSanityCheck:"") {
-    depends(checkVersion, classpath)
+target(name: 'macSanityCheck', description: '', prehook: null, posthook: null) {
+    depends(classpath)
+    
+    ant.taskdef(name: "jarbundler",
+                classname: "net.sourceforge.jarbundler.JarBundler")
 
     packageType = 'mac'
     installerWorkDir = "${projectWorkDir}/installer/mac/dist"
@@ -52,7 +47,7 @@ and configure the files appropriately.
     }
 }
 
-target(createPackageMac: "Creates a Mac launcher") {
+target(name: 'createPackageMac', description: '', prehook: null, posthook: null) {
     depends(macSanityCheck)
 
     event("CreatePackageStart", ['mac'])
