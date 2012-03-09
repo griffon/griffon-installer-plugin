@@ -28,8 +28,6 @@ installerPluginBase = getPluginDirForName('installer').file as String
 // binaryDir = installerWorkDir + "/binary"
 
 target(name: 'prepareDirectories', description: '', prehook: null, posthook: null) {
-    depends(checkVersion)
-
     ant.mkdir(dir: installerWorkDir)
     ant.mkdir(dir: binaryDir)
     ant.mkdir(dir: "${binaryDir}/icons")

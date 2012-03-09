@@ -29,7 +29,7 @@ includeTargets << griffonScript("Package")
 includePluginScript("installer","_Prepare")
 
 target(name: 'copyAllAppArtifacts', description: '', prehook: null, posthook: null) {
-   depends(checkVersion, createConfig)
+   depends(createConfig)
 
    distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
    targetDistDir = binaryDir
