@@ -11,7 +11,8 @@ griffon.project.dependency.resolution = {
     dependencies {
         build 'org.codehaus.izpack:izpack-standalone-compiler:4.3.5',
               'com.googlecode.ant_deb:ant-deb:0.0.1',
-              'com.wutka:jsmoothgen-ant:0.9.9-7'
+              'com.wutka:jsmoothgen-ant:0.9.9-7',
+              'net.sourceforge.jarbundler:jarbundler:2.1.0'
     }
 }
 

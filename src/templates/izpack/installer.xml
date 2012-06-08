@@ -23,6 +23,12 @@
       <author name="@app.author@" email="@app.author.email@"/>
     </authors>
     <url>@app.url@</url>
+    <!--
+         THE FOLLOWING OPTION MUST BE COMMENTED OUT IF USERS
+         WITHOUT ADMIN PERMISSIONS SHOULD BE ABLE TO RUN THE
+         INSTALLER
+     -->
+    <run-privileged condition="izpack.windowsinstall.vista|izpack.windowsinstall.7"/>
   </info>
 
   <guiprefs width="800" height="600" resizable="yes">
