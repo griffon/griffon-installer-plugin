@@ -30,14 +30,20 @@ target(name: 'preparePackageJsmooth', description: '', prehook: null, posthook: 
 
     installerWorkDir = "${projectWorkDir}/installer/jsmooth"
     binaryDir = installerWorkDir
-    installerPluginBase = getPluginDirForName('installer').file as String
-    
+
     ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/app.jsmooth",
              tofile: "${installerWorkDir}/${griffonAppName}.jsmooth")
     ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/griffon-icon-32x32.png",
              tofile: "${installerWorkDir}/${griffonAppName}-icon.png")
     ant.copy(file:"${installerPluginBase}/src/templates/jsmooth/msvcr71.dll",
              tofile: "${installerWorkDir}/msvcr71.dll")
+
+    File applicationTemplates = new File("${basedir}/src/installer/jsmooth")
+    if (applicationTemplates.exists()) {
+        ant.copy(todir: installerWorkDir, overwrite: true) {
+            fileset(dir: applicationTemplates)
+        }
+    }
 
     event("PreparePackageEnd", ['jsmooth'])
 }

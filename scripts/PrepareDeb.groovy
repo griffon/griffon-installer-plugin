@@ -32,11 +32,20 @@ target(name: 'preparePackageDeb', description: '', prehook: null, posthook: null
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'
 
+    prepareDirectories()
+    ant.mkdir(dir: installerResourcesDir)
+
     ant.copy(todir: installerResourcesDir) {
         fileset(dir: "${installerPluginBase}/src/templates/deb")
     }
 
-    prepareDirectories()
+    File applicationTemplates = new File("${basedir}/src/installer/deb")
+    if (applicationTemplates.exists()) {
+        ant.copy(todir: installerWorkDir, overwrite: true) {
+            fileset(dir: applicationTemplates)
+        }
+    }
+
     event('PreparePackageEnd', ['deb'])
 }
 setDefaultTarget(preparePackageDeb)

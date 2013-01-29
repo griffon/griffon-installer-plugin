@@ -43,6 +43,14 @@ target(name: 'preparePackageRpm', description: '', prehook: null, posthook: null
     ant.copy(todir: "${installerWorkDir}/SPECS") {
         fileset(dir: "${installerPluginBase}/src/templates/rpm")
     }
+
+    File applicationTemplates = new File("${basedir}/src/installer/rpm")
+    if (applicationTemplates.exists()) {
+        ant.copy(todir: installerWorkDir, overwrite: true) {
+            fileset(dir: applicationTemplates)
+        }
+    }
+
     ant.move(file: "${installerWorkDir}/SPECS/app.spec",
               tofile: "${installerWorkDir}/SPECS/${griffonAppName}.spec")
 

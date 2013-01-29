@@ -32,11 +32,20 @@ target(name: 'preparePackageIzpack', description: '', prehook: null, posthook: n
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'
 
+    prepareDirectories()
+    ant.mkdir(dir: installerResourcesDir)
+
     ant.copy(todir: installerResourcesDir) {
         fileset(dir: "${installerPluginBase}/src/templates/izpack")
     }
 
-    prepareDirectories()
+    File applicationTemplates = new File("${basedir}/src/installer/izpack")
+    if (applicationTemplates.exists()) {
+        ant.copy(todir: installerWorkDir, overwrite: true) {
+            fileset(dir: applicationTemplates)
+        }
+    }
+
     event('PreparePackageEnd', ['izpack'])
 }
 setDefaultTarget(preparePackageIzpack)
