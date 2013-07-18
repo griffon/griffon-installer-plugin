@@ -29,8 +29,7 @@ includePluginScript("installer","_Create")
 target(name: 'macSanityCheck', description: '', prehook: null, posthook: null) {
     depends(classpath)
     
-    ant.taskdef(name: "jarbundler",
-                classname: "net.sourceforge.jarbundler.JarBundler")
+    ant.taskdef(name: "jarbundler", classname: "net.sourceforge.jarbundler.JarBundler")
 
     packageType = 'mac'
     installerWorkDir = "${projectWorkDir}/installer/mac/dist"
@@ -69,15 +68,21 @@ target(name: 'createPackageMac', description: '', prehook: null, posthook: null)
                    mainclass: griffonApplicationClass,
                    stubfile: "${installerWorkDir}/../${griffonAppName}",
                    version: griffonAppVersion,
-                   icon: iconFile.absolutePath) {
+                   icon: iconFile.absolutePath,
+                   jvmversion:"1.6",
+                   vmoptions: buildConfig.griffon.jarbundler?.jvmOpts ?: "") {
         jarfileset(dir: "${installerWorkDir}/lib", includes: "*.jar")
+        resourcefileset(dir: "${installerWorkDir}/resources")
+        buildConfig.griffon.jarbundler?.jvmProps?.each{ k, v -> javaproperty(name:k, value:v) }
     }
 
     def macDistDir = distDir + '/mac'
     ant.delete(dir: macDistDir, quiet: true, failonerror: false)
     ant.mkdir(dir: macDistDir)
-    ant.copy(todir: macDistDir) {
-        fileset(dir: bundleDir)
+    ant.exec(executable: "cp"){
+        arg(value: "-rp")
+        arg(value: "${bundleDir}/${griffonAppName}.app")
+        arg(value: macDistDir)
     }
 
     // create a DMG if on a Mac
