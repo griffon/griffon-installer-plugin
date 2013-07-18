@@ -31,6 +31,7 @@ target(name: 'prepareDirectories', description: '', prehook: null, posthook: nul
     ant.mkdir(dir: installerWorkDir)
     ant.mkdir(dir: binaryDir)
     ant.mkdir(dir: "${binaryDir}/icons")
+    ant.mkdir(dir: "${binaryDir}/resources")
 }
 
 target(name: 'test_is_linux', description: '', prehook: null, posthook: null) {

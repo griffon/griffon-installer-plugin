@@ -43,4 +43,7 @@ target(name: 'copyAppResources', description: '', prehook: null, posthook: null)
     ant.copy( todir: "${binaryDir}/icons" ) {
         fileset( dir: "${basedir}/griffon-app/resources/", includes: "griffon-icon*" )
     }
+    ant.copy( todir: "${binaryDir}/resources" ) {
+        fileset( dir: "${basedir}/resources/build")
+    }
 }
