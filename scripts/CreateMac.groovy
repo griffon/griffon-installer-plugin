@@ -69,6 +69,7 @@ target(name: 'createPackageMac', description: '', prehook: null, posthook: null)
                    stubfile: "${installerWorkDir}/../${griffonAppName}",
                    version: griffonAppVersion,
                    icon: iconFile.absolutePath,
+                   jvmversion: buildConfig.griffon.jarbundler?.jvmVersion ?: "1.5+",
                    vmoptions: buildConfig.griffon.jarbundler?.jvmOpts ?: "") {
         jarfileset(dir: "${installerWorkDir}/lib", includes: "*.jar")
         resourcefileset(dir: "${installerWorkDir}/resources")
