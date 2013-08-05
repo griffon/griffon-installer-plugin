@@ -33,7 +33,12 @@ target(name: 'preparePackageMac', description: '', prehook: null, posthook: null
     binaryDir = installerWorkDir
 
     ant.mkdir(dir: installerWorkDir)
-    ant.copy(file:"${installerPluginBase}/src/templates/jarbundler/JavaApplicationStub", tofile: "${binaryDir}/${griffonAppName}")
+    //ant.copy(file:"${installerPluginBase}/src/templates/jarbundler/JavaApplicationStub", tofile: "${binaryDir}/${griffonAppName}")
+    ant.exec(executable: "cp"){
+        arg(value: "-p")
+        arg(value: "${installerPluginBase}/src/templates/jarbundler/JavaApplicationStub")
+        arg(value: "${binaryDir}/${griffonAppName}")
+    }
 
     File applicationTemplates = new File("${basedir}/src/installer/mac")
     if (applicationTemplates.exists()) {
